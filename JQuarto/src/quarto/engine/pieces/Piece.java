@@ -48,7 +48,7 @@ public class Piece
 		return allPieces;
 	}
 	
-	public int getPiecePosition()
+	public int getPosition()
 	{
 		return this.piecePosition;
 	}
@@ -73,12 +73,12 @@ public class Piece
 		return this.isPlaced;
 	}
 	
-	public void choosePiece()
+	public void choose()
 	{
 		this.isChosen = true;
 	}
 	
-	public void placePiece(int positionCoordinate)
+	public void place(int positionCoordinate)
 	{
 		this.piecePosition = positionCoordinate;
 		this.isPlaced = true;

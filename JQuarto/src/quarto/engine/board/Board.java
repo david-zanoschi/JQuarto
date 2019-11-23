@@ -71,7 +71,7 @@ public class Board
 		
 		for(int i = 0; i < BoardHelper.NUM_TILES; i++)
 		{
-			tiles[i] = Tile.createTile(i, builder.boardConfiguration.get(i));
+			tiles[i] = Tile.create(i, builder.boardConfiguration.get(i));
 		}
 		
 		return Collections.unmodifiableList(Arrays.asList(tiles));
@@ -175,7 +175,7 @@ public class Board
 		
 		public Builder setPiece(final Piece piece)
 		{
-			this.boardConfiguration.put(piece.getPiecePosition(), piece);
+			this.boardConfiguration.put(piece.getPosition(), piece);
 			return this;
 		}
 		

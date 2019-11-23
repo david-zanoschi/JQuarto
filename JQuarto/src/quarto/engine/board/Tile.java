@@ -16,7 +16,7 @@ public abstract class Tile
 		this.tileCoordinate = tileCoordinate;
 	}
 	
-	public int getTileCoordinate()
+	public int getCoordinate()
 	{
 		return this.tileCoordinate;
 	}
@@ -33,12 +33,12 @@ public abstract class Tile
 		return Collections.unmodifiableMap(allEmptyTiles);
 	}
 	
-	public static Tile createTile(final int tileCoordinate, final Piece piece)
+	public static Tile create(final int tileCoordinate, final Piece piece)
 	{
 		return piece != null ? new OccupiedTile(tileCoordinate, piece) : ALL_EMPTY_TILES.get(tileCoordinate);
 	}
 	
-	public abstract boolean isTileOccupied();
+	public abstract boolean isOccupied();
 	public abstract Piece getPieceOnTile();
 	
 	public static final class EmptyTile extends Tile
@@ -49,7 +49,7 @@ public abstract class Tile
 		}
 
 		@Override
-		public boolean isTileOccupied() 
+		public boolean isOccupied() 
 		{
 			return false;
 		}
@@ -72,7 +72,7 @@ public abstract class Tile
 		}
 
 		@Override
-		public boolean isTileOccupied() 
+		public boolean isOccupied() 
 		{
 			return true;
 		}

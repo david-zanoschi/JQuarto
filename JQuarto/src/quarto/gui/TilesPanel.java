@@ -79,7 +79,7 @@ public class TilesPanel extends JPanel
 			
 			Tile tile = mapElement.getValue();
 			
-			if(tile.isTileOccupied())
+			if(tile.isOccupied())
 			{
 				Piece pieceOnTile = tile.getPieceOnTile();
 				JLabel tileLabel = mapElement.getKey();
@@ -128,11 +128,11 @@ public class TilesPanel extends JPanel
 				@Override
 				public void mouseClicked(MouseEvent e) 
 				{
-					if(	!tileLabelTileMap.get(label).isTileOccupied() &&
+					if(	!tileLabelTileMap.get(label).isOccupied() &&
 						isMouseListenerEnabled && areMouseListenersEnabled)
 					{
 						Piece chosenPiece = board.computeChosenPiece();
-						chosenPiece.placePiece(tileLabelTileMap.get(label).getTileCoordinate());
+						chosenPiece.place(tileLabelTileMap.get(label).getCoordinate());
 						board = board.update();
 						piecesPanel.setBoard(board);
 						label.setIcon(GuiHelper.PIECE_SLOTS_ICONS.get(chosenPiece.getPieceNumberToString() + "Slot"));
