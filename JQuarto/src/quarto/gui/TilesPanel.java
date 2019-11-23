@@ -83,7 +83,7 @@ public class TilesPanel extends JPanel
 			{
 				Piece pieceOnTile = tile.getPieceOnTile();
 				JLabel tileLabel = mapElement.getKey();
-				tileLabel.setIcon(GuiHelper.PIECE_SLOTS_ICONS.get(pieceOnTile.getPieceType().toString() + "Slot"));
+				tileLabel.setIcon(GuiHelper.PIECE_SLOTS_ICONS.get(pieceOnTile.getPieceNumber() + "Slot"));
 			}	
 		}
 	}
@@ -135,7 +135,7 @@ public class TilesPanel extends JPanel
 						chosenPiece.placePiece(tileLabelTileMap.get(label).getTileCoordinate());
 						board = board.update();
 						piecesPanel.setBoard(board);
-						label.setIcon(GuiHelper.PIECE_SLOTS_ICONS.get(chosenPiece.getPieceType().toString() + "Slot"));
+						label.setIcon(GuiHelper.PIECE_SLOTS_ICONS.get(chosenPiece.getPieceNumber() + "Slot"));
 						
 						isMouseListenerEnabled = false;
 						

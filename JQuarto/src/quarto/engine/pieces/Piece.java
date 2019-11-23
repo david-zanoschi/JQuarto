@@ -9,12 +9,14 @@ public class Piece
 	
 	protected int piecePosition;
 	protected final PieceType pieceType;
+	protected final Integer pieceNumber;
 	protected boolean isChosen = false;
 	protected boolean isPlaced = false;
 	
-	Piece(final PieceType pieceType)
+	Piece(final PieceType pieceType, final Integer pieceNumber)
 	{
 		this.pieceType = pieceType;
+		this.pieceNumber = pieceNumber;
 	}
 	
 	private static List<Piece> createAllPieces()
@@ -22,26 +24,26 @@ public class Piece
 		List<Piece> allPieces = new ArrayList<>();
 		
 		// whites
-		allPieces.add(new Piece(PieceType.CHST));
-		allPieces.add(new Piece(PieceType.ChST));
-		allPieces.add(new Piece(PieceType.CHSt));
-		allPieces.add(new Piece(PieceType.ChSt));
+		allPieces.add(new Piece(PieceType.CHST, 0));
+		allPieces.add(new Piece(PieceType.CHSt, 1));
+		allPieces.add(new Piece(PieceType.ChST, 2));
+		allPieces.add(new Piece(PieceType.ChSt, 3));
 		
-		allPieces.add(new Piece(PieceType.CHsT));
-		allPieces.add(new Piece(PieceType.ChsT));
-		allPieces.add(new Piece(PieceType.CHst));
-		allPieces.add(new Piece(PieceType.Chst));
+		allPieces.add(new Piece(PieceType.CHsT, 4));
+		allPieces.add(new Piece(PieceType.CHst, 5));
+		allPieces.add(new Piece(PieceType.ChsT, 6));
+		allPieces.add(new Piece(PieceType.Chst, 7));
 		
 		// blacks
-		allPieces.add(new Piece(PieceType.cHST));
-		allPieces.add(new Piece(PieceType.cHSt));
-		allPieces.add(new Piece(PieceType.chST));
-		allPieces.add(new Piece(PieceType.chSt));
+		allPieces.add(new Piece(PieceType.cHST, 8));
+		allPieces.add(new Piece(PieceType.cHSt, 9));
+		allPieces.add(new Piece(PieceType.chST, 10));
+		allPieces.add(new Piece(PieceType.chSt, 11));
 
-		allPieces.add(new Piece(PieceType.cHsT));
-		allPieces.add(new Piece(PieceType.cHst));
-		allPieces.add(new Piece(PieceType.chsT));
-		allPieces.add(new Piece(PieceType.chst));
+		allPieces.add(new Piece(PieceType.cHsT, 12));
+		allPieces.add(new Piece(PieceType.cHst, 13));
+		allPieces.add(new Piece(PieceType.chsT, 14));
+		allPieces.add(new Piece(PieceType.chst, 15));
 		
 		return allPieces;
 	}
@@ -54,6 +56,11 @@ public class Piece
 	public PieceType getPieceType()
 	{
 		return this.pieceType;
+	}
+	
+	public String getPieceNumber()
+	{
+		return this.pieceNumber.toString();
 	}
 	
 	public boolean isChosen()
@@ -80,34 +87,122 @@ public class Piece
 	
 	public enum PieceType
 	{
-		CHST("CHST"),
-		ChST("ChST"),
-		CHsT("CHsT"),
-		CHSt("CHSt"),
-		ChsT("ChsT"),
-		CHst("CHst"),
-		ChSt("ChSt"),
-		Chst("Chst"),
-		cHST("cHST"),
-		chST("chST"),
-		cHsT("cHsT"),
-		cHSt("cHSt"),
-		chsT("chsT"),
-		cHst("cHst"),
-		chSt("chSt"),
-		chst("chst");
+		CHST(PieceColor.LIGHT, PieceHeight.TALL, PieceShape.ROUND, PieceTopper.FLAT),
+		ChST(PieceColor.LIGHT, PieceHeight.SHORT, PieceShape.ROUND, PieceTopper.FLAT),
+		CHsT(PieceColor.LIGHT, PieceHeight.TALL, PieceShape.SQUARE, PieceTopper.FLAT),
+		CHSt(PieceColor.LIGHT, PieceHeight.TALL, PieceShape.ROUND, PieceTopper.HOLE),
+		ChsT(PieceColor.LIGHT, PieceHeight.SHORT, PieceShape.SQUARE, PieceTopper.FLAT),
+		CHst(PieceColor.LIGHT, PieceHeight.TALL, PieceShape.SQUARE, PieceTopper.HOLE),
+		ChSt(PieceColor.LIGHT, PieceHeight.SHORT, PieceShape.ROUND, PieceTopper.HOLE),
+		Chst(PieceColor.LIGHT, PieceHeight.SHORT, PieceShape.SQUARE, PieceTopper.HOLE),
+		cHST(PieceColor.DARK, PieceHeight.TALL, PieceShape.ROUND, PieceTopper.FLAT),
+		chST(PieceColor.DARK, PieceHeight.SHORT, PieceShape.ROUND, PieceTopper.FLAT),
+		cHsT(PieceColor.DARK, PieceHeight.TALL, PieceShape.SQUARE, PieceTopper.FLAT),
+		cHSt(PieceColor.DARK, PieceHeight.TALL, PieceShape.ROUND, PieceTopper.HOLE),
+		chsT(PieceColor.DARK, PieceHeight.SHORT, PieceShape.SQUARE, PieceTopper.FLAT),
+		cHst(PieceColor.DARK, PieceHeight.TALL, PieceShape.SQUARE, PieceTopper.HOLE),
+		chSt(PieceColor.DARK, PieceHeight.SHORT, PieceShape.ROUND, PieceTopper.HOLE),
+		chst(PieceColor.DARK, PieceHeight.SHORT, PieceShape.SQUARE, PieceTopper.HOLE);
 		
-		private String pieceName;
+		private PieceColor pieceColor;
+		private PieceHeight pieceHeight;
+		private PieceShape pieceShape;
+		private PieceTopper pieceTopper;
 		
-		private PieceType(final String pieceName) 
+		private PieceType(	final PieceColor pieceColor,
+							final PieceHeight pieceHeight,
+							final PieceShape pieceShape,
+							final PieceTopper pieceTopper) 
 		{
-			this.pieceName = pieceName;
+			this.pieceColor = pieceColor;
+			this.pieceHeight = pieceHeight;
+			this.pieceShape = pieceShape;
+			this.pieceTopper = pieceTopper;
 		}
 		
 		@Override
 		public String toString()
 		{
-			return this.pieceName;
+			return this.pieceColor.toString() +
+					this.pieceHeight.toString() +
+					this.pieceShape.toString() +
+					this.pieceTopper.toString();
+		}
+	}
+	
+	public enum PieceColor
+	{
+		LIGHT("C"),
+		DARK("c");
+		
+		private String color;
+		
+		private PieceColor(final String color)
+		{
+			this.color = color;
+		}
+		
+		@Override
+		public String toString()
+		{
+			return this.color;
+		}
+	}
+	
+	public enum PieceHeight
+	{
+		TALL("H"),
+		SHORT("h");
+		
+		private String height;
+		
+		private PieceHeight(final String height)
+		{
+			this.height = height;
+		}
+		
+		@Override
+		public String toString() 
+		{
+			return this.height;
+		}
+	}
+	
+	public enum PieceShape
+	{
+		ROUND("S"),
+		SQUARE("s");
+		
+		private String shape;
+		
+		private PieceShape(final String shape)
+		{
+			this.shape = shape;
+		}
+		
+		@Override
+		public String toString() 
+		{
+			return this.shape;
+		}
+	}
+	
+	public enum PieceTopper
+	{
+		FLAT("T"),
+		HOLE("t");
+		
+		private String topper;
+		
+		private PieceTopper(final String topper)
+		{
+			this.topper = topper;
+		}
+		
+		@Override
+		public String toString() 
+		{
+			return this.topper;
 		}
 	}
 }
