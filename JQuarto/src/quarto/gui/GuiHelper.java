@@ -10,20 +10,12 @@ import java.util.Map;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 
-import quarto.engine.board.BoardHelper;
 import quarto.engine.pieces.Piece;
 
 public class GuiHelper 
 {
 	private final static String DEFAULT_PIECE_SLOT_ICON_PATH = "PieceSlot";
 	private final static String ALTERNATE_PIECE_SLOT_ICON_PATH = "AlternatePieceSlot";
-
-	public final static int PIECE_SIZE = GameWindow.WINDOW_WIDTH / PiecesPanel.PIECES_PER_ROW;
-	public final static int PIECES_PANEL_WIDTH = GameWindow.WINDOW_WIDTH;
-	public final static int PIECES_PANEL_HEIGHT = PiecesPanel.PIECES_PER_ROW * GuiHelper.PIECE_SIZE;
-	
-	public final static int TILE_SIZE = GameWindow.WINDOW_WIDTH / BoardHelper.NUM_TILES_PER_LINE;
-	public final static int TILES_PANEL_SIZE = BoardHelper.NUM_TILES_PER_LINE * GuiHelper.TILE_SIZE;
 	
 	public final static ImageIcon TILE_ICON = getTileIcon(DEFAULT_PIECE_SLOT_ICON_PATH);
 	public final static ImageIcon ALTERNATE_TILE_ICON = getTileIcon(ALTERNATE_PIECE_SLOT_ICON_PATH);
@@ -43,8 +35,8 @@ public class GuiHelper
 			e.printStackTrace();
 		}
 		
-		Image tileImage = tileBufferedImage.getScaledInstance(	TILE_SIZE, 
-																TILE_SIZE, 
+		Image tileImage = tileBufferedImage.getScaledInstance(	TilesPanel.TILE_SIZE, 
+																TilesPanel.TILE_SIZE, 
 																Image.SCALE_SMOOTH);
 		ImageIcon tileImageIcon = new ImageIcon(tileImage);
 		
@@ -58,7 +50,7 @@ public class GuiHelper
 		for(Piece piece : Piece.ALL_PIECES)
 		{
 			BufferedImage pieceBufferedImage = null;
-			String key = piece.getPieceNumberToString() + input;
+			String key = piece.getPieceNumberAsString() + input;
 			
 			try 
 			{
@@ -73,11 +65,13 @@ public class GuiHelper
 			
 			if(input == "Slot")
 			{
-				pieceImage = pieceBufferedImage.getScaledInstance(TILE_SIZE, TILE_SIZE, Image.SCALE_SMOOTH);
+				pieceImage = pieceBufferedImage.getScaledInstance(	TilesPanel.TILE_SIZE, 
+																	TilesPanel.TILE_SIZE, 
+																	Image.SCALE_SMOOTH);
 			}
 			else
 			{
-				pieceImage = pieceBufferedImage.getScaledInstance(PIECE_SIZE, PIECE_SIZE, Image.SCALE_SMOOTH);				
+				pieceImage = pieceBufferedImage.getScaledInstance(PiecesPanel.PIECE_SIZE, PiecesPanel.PIECE_SIZE, Image.SCALE_SMOOTH);				
 			}
 			
 			ImageIcon pieceImageIcon = new ImageIcon(pieceImage);

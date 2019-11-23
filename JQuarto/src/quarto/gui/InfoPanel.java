@@ -17,6 +17,7 @@ public class InfoPanel extends JPanel
 	public InfoPanel() 
 	{
 		this.infoLabel = new JLabel();
+		
 		this.configure();
 	}
 	

@@ -25,22 +25,20 @@ public class StateManager
 	{
 		infoPanel = new InfoPanel();
 		piecesPanel = new PiecesPanel(board);
-		tilesPanel = new TilesPanel(board, piecesPanel);
+		tilesPanel = new TilesPanel(board);
 		gameWindow = new GameWindow(board, infoPanel, piecesPanel, tilesPanel);
 	}
 	
-	public void initiateGame()
+	public void run()
 	{
 		infoPanel.setInfo("Choose a piece for your opponent");
 		
 		piecesPanel.drawPieces();
-		piecesPanel.addMouseListeners();
 		
 		tilesPanel.drawTiles();
-		tilesPanel.addMouseListeners();
 		tilesPanel.disableMouseListeners();
 		
-		gameWindow.drawGameWindow();
+		gameWindow.draw();
 	}
 	
 	public static void pieceChosen()
@@ -66,6 +64,7 @@ public class StateManager
 		tilesPanel.updateTiles();
 		tilesPanel.disableMouseListeners();
 
+		piecesPanel.setBoard(tilesPanel.getBoard());
 		piecesPanel.updatePieces();
 		piecesPanel.enableMouseListeners();
 		

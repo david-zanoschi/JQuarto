@@ -11,7 +11,7 @@ public class JQuarto {
 		Board board = builder.build();
 		
 		StateManager stateManager = new StateManager(board);
-		stateManager.initiateGame();
+		stateManager.run();
 	}
 
 }

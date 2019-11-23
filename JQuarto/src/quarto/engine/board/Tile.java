@@ -16,11 +16,6 @@ public abstract class Tile
 		this.tileCoordinate = tileCoordinate;
 	}
 	
-	public int getCoordinate()
-	{
-		return this.tileCoordinate;
-	}
-	
 	private static Map<Integer, EmptyTile> createAllEmptyTiles()
 	{
 		final Map<Integer, EmptyTile> allEmptyTiles = new HashMap<>();
@@ -31,6 +26,11 @@ public abstract class Tile
 		}
 		
 		return Collections.unmodifiableMap(allEmptyTiles);
+	}
+	
+	public int getCoordinate()
+	{
+		return this.tileCoordinate;
 	}
 	
 	public static Tile create(final int tileCoordinate, final Piece piece)
@@ -65,7 +65,7 @@ public abstract class Tile
 	{
 		private final Piece pieceOnTile;
 		
-		OccupiedTile(final int tileCoordinate, final Piece pieceOnTile) 
+		private OccupiedTile(final int tileCoordinate, final Piece pieceOnTile) 
 		{
 			super(tileCoordinate);
 			this.pieceOnTile = pieceOnTile;

@@ -22,15 +22,16 @@ public class GameWindow
 		this.gameWindow.add(infoPanel, BorderLayout.CENTER);
 		this.gameWindow.add(piecesPanel, BorderLayout.SOUTH);
 		
-		configure();
+		this.configure();
 	}
 	
 	private void configure()
 	{
 		this.gameWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.gameWindow.setResizable(false);
 	}
 	
-	public void drawGameWindow()
+	public void draw()
 	{
 		this.gameWindow.setLocationRelativeTo(null);
 		this.gameWindow.pack();

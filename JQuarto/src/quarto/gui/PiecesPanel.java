@@ -22,25 +22,28 @@ public class PiecesPanel extends JPanel
 {
 	public final static int PIECES_PER_ROW = 8;
 	public final static int PIECES_PER_COLUMN = 2;
+	public final static int PIECE_SIZE = GameWindow.WINDOW_WIDTH / PIECES_PER_ROW;	
+	public final static int PIECES_PANEL_WIDTH = GameWindow.WINDOW_WIDTH;
+	public final static int PIECES_PANEL_HEIGHT = PIECES_PER_ROW * PIECE_SIZE;
 	
+	private boolean areMouseListenersEnabled = true;
 	private Board board;
 	private Map<JLabel, Piece> pieceLabelPieceMap;
 	private Map<JLabel, MouseListener> pieceLabelMouseListenerMap;
-	
-	private boolean areMouseListenersEnabled = true;
 	
 	public PiecesPanel(Board board) 
 	{
 		this.board = board;
 		this.pieceLabelPieceMap = new HashMap<>();
 		this.pieceLabelMouseListenerMap = new HashMap<>();
+		
 		this.configure();
 	}
 	
 	private void configure()
 	{
 		this.setLayout(new GridLayout(PIECES_PER_COLUMN, PIECES_PER_ROW));
-		this.setSize(new Dimension(GuiHelper.PIECES_PANEL_WIDTH, GuiHelper.PIECES_PANEL_HEIGHT));
+		this.setSize(new Dimension(PIECES_PANEL_WIDTH, PIECES_PANEL_HEIGHT));
 	}
 	
 	public Board getBoard()
@@ -64,7 +67,7 @@ public class PiecesPanel extends JPanel
 			pieceLabel.setOpaque(true);
 			if(this.board.getRemainingPieces().get(i) != null)
 			{
-				pieceLabel.setIcon(GuiHelper.PIECES_ICONS.get(this.board.getRemainingPieces().get(i).getPieceNumberToString()));
+				pieceLabel.setIcon(GuiHelper.PIECES_ICONS.get(this.board.getRemainingPieces().get(i).getPieceNumberAsString()));
 				
 				pieceLabelPieceMap.put(pieceLabel, this.board.getRemainingPieces().get(i));
 				pieceLabelMouseListenerMap.put(pieceLabel, null);
@@ -72,6 +75,8 @@ public class PiecesPanel extends JPanel
 			
 			this.add(pieceLabel);
 		}
+		
+		addMouseListeners();
 	}
 	
 	public void updatePieces()
@@ -92,7 +97,17 @@ public class PiecesPanel extends JPanel
 		}
 	}
 	
-	public void addMouseListeners()
+	public void disableMouseListeners()
+	{
+		this.areMouseListenersEnabled = false;
+	}
+	
+	public void enableMouseListeners()
+	{
+		this.areMouseListenersEnabled = true;
+	}
+	
+	private void addMouseListeners()
 	{
 		Iterator<Entry<JLabel, MouseListener>> mapIterator = this.pieceLabelMouseListenerMap.entrySet().iterator();
 		
@@ -148,16 +163,6 @@ public class PiecesPanel extends JPanel
 			label.addMouseListener(mouseListener);
 			this.pieceLabelMouseListenerMap.put(label, mouseListener);
 		}
-	}
-	
-	public void disableMouseListeners()
-	{
-		this.areMouseListenersEnabled = false;
-	}
-	
-	public void enableMouseListeners()
-	{
-		this.areMouseListenersEnabled = true;
 	}
 }
 

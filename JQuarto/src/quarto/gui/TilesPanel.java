@@ -20,36 +20,32 @@ import quarto.engine.pieces.Piece;
 @SuppressWarnings("serial")
 public class TilesPanel extends JPanel
 {
-	
+	public final static int TILE_SIZE = GameWindow.WINDOW_WIDTH / BoardHelper.NUM_TILES_PER_LINE;
+	public final static int TILES_PANEL_SIZE = BoardHelper.NUM_TILES_PER_LINE * TILE_SIZE;
 
+	private boolean areMouseListenersEnabled = true;
+	private Board board;
 	private Map<JLabel, Tile> tileLabelTileMap;
 	private Map<JLabel, MouseListener> tileLabelMouseListenerMap;
 	
-	private Board board;
-	private PiecesPanel piecesPanel;
-	
-	private boolean areMouseListenersEnabled = true;
-	
-	public TilesPanel(Board board, PiecesPanel piecesPanel) 
+	public TilesPanel(Board board) 
 	{
 		this.board = board;
-		this.piecesPanel = piecesPanel;
-		
 		this.tileLabelTileMap = new HashMap<>();
 		this.tileLabelMouseListenerMap = new HashMap<>();
 		
 		this.configure();
 	}
 	
-	public Board getBoard()
-	{
-		return this.board;
-	}
-	
 	private void configure()
 	{
 		this.setLayout(new GridLayout(BoardHelper.NUM_TILES_PER_LINE, BoardHelper.NUM_TILES_PER_LINE));
-		this.setSize(GuiHelper.TILES_PANEL_SIZE, GuiHelper.TILES_PANEL_SIZE);
+		this.setSize(TILES_PANEL_SIZE, TILES_PANEL_SIZE);
+	}
+	
+	public Board getBoard()
+	{
+		return this.board;
 	}
 	
 	public void drawTiles()
@@ -67,6 +63,8 @@ public class TilesPanel extends JPanel
 			
 			this.add(tileLabel);
 		}
+		
+		addMouseListeners();
 	}
 	
 	public void updateTiles()
@@ -83,12 +81,22 @@ public class TilesPanel extends JPanel
 			{
 				Piece pieceOnTile = tile.getPieceOnTile();
 				JLabel tileLabel = mapElement.getKey();
-				tileLabel.setIcon(GuiHelper.PIECE_SLOTS_ICONS.get(pieceOnTile.getPieceNumberToString() + "Slot"));
+				tileLabel.setIcon(GuiHelper.PIECE_SLOTS_ICONS.get(pieceOnTile.getPieceNumberAsString() + "Slot"));
 			}	
 		}
 	}
 	
-	public void addMouseListeners() 
+	public void disableMouseListeners()
+	{
+		this.areMouseListenersEnabled = false;
+	}
+	
+	public void enableMouseListeners()
+	{
+		this.areMouseListenersEnabled = true;
+	}
+	
+	private void addMouseListeners() 
 	{
 		Iterator<Entry<JLabel, MouseListener>> mapIterator = this.tileLabelMouseListenerMap. entrySet().iterator();
 		
@@ -131,11 +139,10 @@ public class TilesPanel extends JPanel
 					if(	!tileLabelTileMap.get(label).isOccupied() &&
 						isMouseListenerEnabled && areMouseListenersEnabled)
 					{
-						Piece chosenPiece = board.computeChosenPiece();
+						Piece chosenPiece = board.getChosenPiece();
 						chosenPiece.place(tileLabelTileMap.get(label).getCoordinate());
 						board = board.update();
-						piecesPanel.setBoard(board);
-						label.setIcon(GuiHelper.PIECE_SLOTS_ICONS.get(chosenPiece.getPieceNumberToString() + "Slot"));
+						label.setIcon(GuiHelper.PIECE_SLOTS_ICONS.get(chosenPiece.getPieceNumberAsString() + "Slot"));
 						
 						isMouseListenerEnabled = false;
 						
@@ -148,18 +155,6 @@ public class TilesPanel extends JPanel
 			tileLabelMouseListenerMap.put(label, mouseListener);
 		}
 	}
-	
-	public void disableMouseListeners()
-	{
-		this.areMouseListenersEnabled = false;
-	}
-	
-	public void enableMouseListeners()
-	{
-		this.areMouseListenersEnabled = true;
-	}
-	
-	
 }
 
 

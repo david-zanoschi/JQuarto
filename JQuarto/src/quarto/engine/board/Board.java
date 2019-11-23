@@ -2,7 +2,6 @@ package quarto.engine.board;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -12,17 +11,48 @@ import quarto.engine.pieces.Piece;
 
 public class Board 
 {
-	private List<Tile> gameBoard;
-	private List<Integer> legalPositions;
-	
 	private List<Piece> placedPieces;
 	private	List<Piece> remainingPieces;
+	private List<Tile> gameBoard;
 	
 	Board(Builder builder)
 	{
-		this.remainingPieces = computeRemainingPieces();
 		this.placedPieces = computePlacedPieces();
+		this.remainingPieces = computeRemainingPieces();
 		this.gameBoard = computeGameBoard(builder);
+	}
+	
+	public List<Piece> getPlacedPieces()
+	{
+		return this.placedPieces;
+	}
+	
+	public List<Piece> getRemainingPieces()
+	{
+		return this.remainingPieces;
+	}
+	
+	public List<Tile> getGameBoard()
+	{
+		return this.gameBoard;
+	}
+	
+	public Tile getTile(int tileCoordinate)
+	{
+		return this.gameBoard.get(tileCoordinate);
+	}
+	
+	public Piece getChosenPiece()
+	{
+		for(Piece piece : this.remainingPieces)
+		{
+			if(piece != null && piece.isChosen() && !piece.isPlaced())
+			{
+				return piece;
+			}
+		}
+		
+		return null;
 	}
 	
 	public Board update()
@@ -40,29 +70,44 @@ public class Board
 		return builder.build();
 	}
 	
-	public List<Tile> getGameBoard()
+	public boolean isGameOver()
 	{
-		return this.gameBoard;
-	}
-	
-	public Collection<Integer> getLegalPositions()
-	{
-		return this.legalPositions;
-	}
-	
-	public List<Piece> getPlacedPieces()
-	{
-		return this.placedPieces;
-	}
-	
-	public List<Piece> getRemainingPieces()
-	{
-		return this.remainingPieces;
-	}
-	
-	public Tile getTile(int tileCoordinate)
-	{
-		return this.gameBoard.get(tileCoordinate);
+		for(final Integer[] line : BoardHelper.BOARD_LINES)
+		{
+			List<Piece> piecesOnLine = new ArrayList<>();
+
+			for(final Integer coordinate : line)
+			{
+				Piece pieceOnTile = this.getTile(coordinate).getPieceOnTile();
+
+				if(pieceOnTile != null)
+				{ 
+					piecesOnLine.add(pieceOnTile);
+				}
+				else
+				{
+					break;
+				}
+
+				if(piecesOnLine.size() == BoardHelper.NUM_TILES_PER_LINE)
+				{
+					for(int i = 0; i < 4; i++)
+					{
+						if(	piecesOnLine.get(0).getType().toString().charAt(i) ==
+							piecesOnLine.get(1).getType().toString().charAt(i) &&
+							piecesOnLine.get(0).getType().toString().charAt(i) ==
+							piecesOnLine.get(2).getType().toString().charAt(i) &&
+							piecesOnLine.get(0).getType().toString().charAt(i) ==
+							piecesOnLine.get(3).getType().toString().charAt(i))
+						{
+							return true;
+						}
+					}
+				}
+			}
+		}
+
+		return false;
 	}
 	
 	private List<Tile> computeGameBoard(final Builder builder)
@@ -109,59 +154,6 @@ public class Board
 		}
 		
 		return remainingPieces;
-	}
-	
-	public Piece computeChosenPiece()
-	{
-		for(Piece piece : this.remainingPieces)
-		{
-			if(piece != null && piece.isChosen() && !piece.isPlaced())
-			{
-				return piece;
-			}
-		}
-		
-		return null;
-	}
-	
-	public boolean isGameOver()
-	{
-		for(final Integer[] line : BoardHelper.BOARD_LINES)
-		{
-			List<Piece> piecesOnLine = new ArrayList<>();
-
-			for(final Integer coordinate : line)
-			{
-				Piece pieceOnTile = this.getTile(coordinate).getPieceOnTile();
-
-				if(pieceOnTile != null)
-				{ 
-					piecesOnLine.add(pieceOnTile);
-				}
-				else
-				{
-					break;
-				}
-
-				if(piecesOnLine.size() == BoardHelper.NUM_TILES_PER_LINE)
-				{
-					for(int i = 0; i < 4; i++)
-					{
-						if(	piecesOnLine.get(0).getType().toString().charAt(i) ==
-							piecesOnLine.get(1).getType().toString().charAt(i) &&
-							piecesOnLine.get(0).getType().toString().charAt(i) ==
-							piecesOnLine.get(2).getType().toString().charAt(i) &&
-							piecesOnLine.get(0).getType().toString().charAt(i) ==
-							piecesOnLine.get(3).getType().toString().charAt(i))
-						{
-							return true;
-						}
-					}
-				}
-			}
-		}
-
-		return false;
 	}
 	
 	public static class Builder
