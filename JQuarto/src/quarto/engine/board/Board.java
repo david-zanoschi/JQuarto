@@ -129,11 +129,11 @@ public class Board
 		for(final Integer[] line : BoardHelper.BOARD_LINES)
 		{
 			List<Piece> piecesOnLine = new ArrayList<>();
-			
+
 			for(final Integer coordinate : line)
 			{
 				Piece pieceOnTile = this.getTile(coordinate).getPieceOnTile();
-				
+
 				if(pieceOnTile != null)
 				{ 
 					piecesOnLine.add(pieceOnTile);
@@ -142,78 +142,26 @@ public class Board
 				{
 					break;
 				}
-				
+
 				if(piecesOnLine.size() == BoardHelper.NUM_TILES_PER_LINE)
 				{
-					if(	isColorSameOnLine(piecesOnLine) ||
-						isHeightSameOnLine(piecesOnLine) ||
-						isShapeSameOnLine(piecesOnLine) ||
-						isTopperSameOnLine(piecesOnLine))
+					for(int i = 0; i < 4; i++)
 					{
-						return true;
+						if(	piecesOnLine.get(0).getType().toString().charAt(i) ==
+							piecesOnLine.get(1).getType().toString().charAt(i) &&
+							piecesOnLine.get(0).getType().toString().charAt(i) ==
+							piecesOnLine.get(2).getType().toString().charAt(i) &&
+							piecesOnLine.get(0).getType().toString().charAt(i) ==
+							piecesOnLine.get(3).getType().toString().charAt(i))
+						{
+							return true;
+						}
 					}
-					return false;
 				}
 			}
 		}
-		
+
 		return false;
-	}
-	
-	private static boolean isColorSameOnLine(List<Piece> piecesOnLine)
-	{
-		if(	piecesOnLine.get(0).getType().getColor()
-			.equals(piecesOnLine.get(1).getType().getColor()) &&
-			piecesOnLine.get(0).getType().getColor()
-			.equals(piecesOnLine.get(2).getType().getColor()) &&
-			piecesOnLine.get(0).getType().getColor()
-			.equals(piecesOnLine.get(3).getType().getColor()))
-		{
-			return true;
-		}
-		return false;
-	}
-	
-	private static boolean isHeightSameOnLine(List<Piece> piecesOnLine)
-	{
-		if(	piecesOnLine.get(0).getType().getHeight()
-				.equals(piecesOnLine.get(1).getType().getHeight()) &&
-				piecesOnLine.get(0).getType().getHeight()
-				.equals(piecesOnLine.get(2).getType().getHeight()) &&
-				piecesOnLine.get(0).getType().getHeight()
-				.equals(piecesOnLine.get(3).getType().getHeight()))
-			{
-				return true;
-			}
-			return false;
-	}
-	
-	private static boolean isShapeSameOnLine(List<Piece> piecesOnLine)
-	{
-		if(	piecesOnLine.get(0).getType().getShape()
-				.equals(piecesOnLine.get(1).getType().getShape()) &&
-				piecesOnLine.get(0).getType().getShape()
-				.equals(piecesOnLine.get(2).getType().getShape()) &&
-				piecesOnLine.get(0).getType().getShape()
-				.equals(piecesOnLine.get(3).getType().getShape()))
-			{
-				return true;
-			}
-			return false;
-	}
-	
-	private static boolean isTopperSameOnLine(List<Piece> piecesOnLine)
-	{
-		if(	piecesOnLine.get(0).getType().getTopper()
-				.equals(piecesOnLine.get(1).getType().getTopper()) &&
-				piecesOnLine.get(0).getType().getTopper()
-				.equals(piecesOnLine.get(2).getType().getTopper()) &&
-				piecesOnLine.get(0).getType().getTopper()
-				.equals(piecesOnLine.get(3).getType().getTopper()))
-			{
-				return true;
-			}
-			return false;
 	}
 	
 	public static class Builder
