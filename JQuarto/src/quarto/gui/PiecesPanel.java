@@ -66,7 +66,7 @@ public class PiecesPanel extends JPanel
 			{
 				//pieceLabel.setIcon(getPieceIcon(this.board.getRemainingPieces().get(i).getPieceType().toString()));
 				
-				pieceLabel.setIcon(GuiHelper.PIECES_ICONS.get(this.board.getRemainingPieces().get(i).getPieceNumber()));
+				pieceLabel.setIcon(GuiHelper.PIECES_ICONS.get(this.board.getRemainingPieces().get(i).getPieceNumberString()));
 				
 				pieceLabelPieceMap.put(pieceLabel, this.board.getRemainingPieces().get(i));
 				pieceLabelMouseListenerMap.put(pieceLabel, null);

@@ -58,7 +58,7 @@ public class Piece
 		return this.pieceType;
 	}
 	
-	public String getPieceNumber()
+	public String getPieceNumberString()
 	{
 		return this.pieceNumber.toString();
 	}
