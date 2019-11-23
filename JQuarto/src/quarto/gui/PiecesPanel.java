@@ -64,9 +64,7 @@ public class PiecesPanel extends JPanel
 			pieceLabel.setOpaque(true);
 			if(this.board.getRemainingPieces().get(i) != null)
 			{
-				//pieceLabel.setIcon(getPieceIcon(this.board.getRemainingPieces().get(i).getPieceType().toString()));
-				
-				pieceLabel.setIcon(GuiHelper.PIECES_ICONS.get(this.board.getRemainingPieces().get(i).getPieceNumberString()));
+				pieceLabel.setIcon(GuiHelper.PIECES_ICONS.get(this.board.getRemainingPieces().get(i).getPieceNumberToString()));
 				
 				pieceLabelPieceMap.put(pieceLabel, this.board.getRemainingPieces().get(i));
 				pieceLabelMouseListenerMap.put(pieceLabel, null);
@@ -151,17 +149,6 @@ public class PiecesPanel extends JPanel
 			this.pieceLabelMouseListenerMap.put(label, mouseListener);
 		}
 	}
-	
-//	public void removeMouseListeners()
-//	{
-//		Iterator<Entry<JLabel, MouseListener>> mapIterator = this.pieceLabelMouseListenerMap.entrySet().iterator();
-//		
-//		while(mapIterator.hasNext())
-//		{
-//			Entry<JLabel, MouseListener> mapElement = (Entry<JLabel, MouseListener>) mapIterator.next();
-//			mapElement.getKey().removeMouseListener(mapElement.getValue());
-//		}
-//	}
 	
 	public void disableMouseListeners()
 	{

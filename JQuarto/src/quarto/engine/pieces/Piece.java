@@ -53,12 +53,12 @@ public class Piece
 		return this.piecePosition;
 	}
 	
-	public PieceType getPieceType()
+	public PieceType getType()
 	{
 		return this.pieceType;
 	}
 	
-	public String getPieceNumberString()
+	public String getPieceNumberToString()
 	{
 		return this.pieceNumber.toString();
 	}
@@ -120,13 +120,24 @@ public class Piece
 			this.pieceTopper = pieceTopper;
 		}
 		
-		@Override
-		public String toString()
+		public PieceColor getColor()
 		{
-			return this.pieceColor.toString() +
-					this.pieceHeight.toString() +
-					this.pieceShape.toString() +
-					this.pieceTopper.toString();
+			return this.pieceColor;
+		}
+		
+		public PieceHeight getHeight()
+		{
+			return this.pieceHeight;
+		}
+		
+		public PieceShape getShape()
+		{
+			return this.pieceShape;
+		}
+		
+		public PieceTopper getTopper()
+		{
+			return this.pieceTopper;
 		}
 	}
 	
@@ -147,6 +158,15 @@ public class Piece
 		{
 			return this.color;
 		}
+		
+		public boolean equals(PieceColor pieceColor)
+		{
+			if(this.color == pieceColor.toString())
+			{
+				return true;
+			}
+			return false;
+		}
 	}
 	
 	public enum PieceHeight
@@ -165,6 +185,15 @@ public class Piece
 		public String toString() 
 		{
 			return this.height;
+		}
+		
+		public boolean equals(PieceHeight pieceHeight)
+		{
+			if(this.height == pieceHeight.toString())
+			{
+				return true;
+			}
+			return false;
 		}
 	}
 	
@@ -185,6 +214,15 @@ public class Piece
 		{
 			return this.shape;
 		}
+		
+		public boolean equals(PieceShape pieceShape)
+		{
+			if(this.shape == pieceShape.toString())
+			{
+				return true;
+			}
+			return false;
+		}
 	}
 	
 	public enum PieceTopper
@@ -203,6 +241,15 @@ public class Piece
 		public String toString() 
 		{
 			return this.topper;
+		}
+		
+		public boolean equals(PieceTopper pieceTopper)
+		{
+			if(this.topper == pieceTopper.toString())
+			{
+				return true;
+			}
+			return false;
 		}
 	}
 }

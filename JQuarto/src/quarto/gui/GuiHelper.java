@@ -58,7 +58,7 @@ public class GuiHelper
 		for(Piece piece : Piece.ALL_PIECES)
 		{
 			BufferedImage pieceBufferedImage = null;
-			String key = piece.getPieceNumberString() + input;
+			String key = piece.getPieceNumberToString() + input;
 			
 			try 
 			{

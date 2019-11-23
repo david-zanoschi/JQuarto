@@ -1,7 +1,7 @@
 package quarto.gui;
 
-import java.awt.*; //awt - abstract window toolkit
-import javax.swing.*; //built on top of awt and provides an aditional set of graphical interface components
+import java.awt.*;
+import javax.swing.*;
 
 import quarto.engine.board.Board;
  
@@ -32,13 +32,8 @@ public class GameWindow
 	
 	public void drawGameWindow()
 	{
-		// display the window (in center of screen)
 		this.gameWindow.setLocationRelativeTo(null);
-				
-		// set the window size with pack() - looks at what the frame contains and sizes it accordingly
 		this.gameWindow.pack();
-				
-		// show the window
 		this.gameWindow.setVisible(true);
 	}	
 }

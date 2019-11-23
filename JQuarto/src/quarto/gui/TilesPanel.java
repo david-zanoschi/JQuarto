@@ -83,7 +83,7 @@ public class TilesPanel extends JPanel
 			{
 				Piece pieceOnTile = tile.getPieceOnTile();
 				JLabel tileLabel = mapElement.getKey();
-				tileLabel.setIcon(GuiHelper.PIECE_SLOTS_ICONS.get(pieceOnTile.getPieceNumberString() + "Slot"));
+				tileLabel.setIcon(GuiHelper.PIECE_SLOTS_ICONS.get(pieceOnTile.getPieceNumberToString() + "Slot"));
 			}	
 		}
 	}
@@ -135,7 +135,7 @@ public class TilesPanel extends JPanel
 						chosenPiece.placePiece(tileLabelTileMap.get(label).getTileCoordinate());
 						board = board.update();
 						piecesPanel.setBoard(board);
-						label.setIcon(GuiHelper.PIECE_SLOTS_ICONS.get(chosenPiece.getPieceNumberString() + "Slot"));
+						label.setIcon(GuiHelper.PIECE_SLOTS_ICONS.get(chosenPiece.getPieceNumberToString() + "Slot"));
 						
 						isMouseListenerEnabled = false;
 						
@@ -148,17 +148,6 @@ public class TilesPanel extends JPanel
 			tileLabelMouseListenerMap.put(label, mouseListener);
 		}
 	}
-	
-//	public void removeMouseListeners()
-//	{
-//		Iterator<Entry<JLabel, MouseListener>> mapIterator = this.tileLabelMouseListenerMap.entrySet().iterator();
-//		
-//		while(mapIterator.hasNext())
-//		{
-//			Entry<JLabel, MouseListener> mapElement = (Entry<JLabel, MouseListener>) mapIterator.next();
-//			mapElement.getKey().removeMouseListener(mapElement.getValue());
-//		}
-//	}
 	
 	public void disableMouseListeners()
 	{
