@@ -167,21 +167,6 @@ public class PiecesPanel extends JPanel
 			this.pieceLabelMouseListenerMap.put(label, mouseListener);
 		}
 	}
-	
-	public void reset() 
-	{
-		// remove mouse listeners
-		Iterator<Entry<JLabel, MouseListener>> mapIterator = this.pieceLabelMouseListenerMap. entrySet().iterator();
-		while(mapIterator.hasNext())
-		{
-			JLabel label = mapIterator.next().getKey();
-			label.removeMouseListener(pieceLabelMouseListenerMap.get(label));
-		}
-		
-		// reset panels configuration
-		this.pieceLabelPieceMap = new HashMap<>();
-		this.pieceLabelMouseListenerMap = new HashMap<>();
-	}
 }
 
 

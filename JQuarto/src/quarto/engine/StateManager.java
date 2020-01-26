@@ -1,11 +1,14 @@
 package quarto.engine;
 
+import java.util.Set;
+
 import quarto.engine.board.Board;
 import quarto.engine.board.Board.Builder;
 import quarto.gui.GameWindow;
 import quarto.gui.InfoPanel;
 import quarto.gui.PiecesPanel;
 import quarto.gui.TilesPanel;
+
 
 public class StateManager 
 {
@@ -54,6 +57,15 @@ public class StateManager
 		gameWindow.addKeyListener();
 		gameWindow.validate();
 		gameWindow.draw();
+		
+//		Set<Thread> threadSet = Thread.getAllStackTraces().keySet();
+//		int i = 0;
+//		for(final Thread thread : threadSet) 
+//		{
+//			System.out.print(i + ") " + thread.getName() + ", " + thread.isDaemon() + "\n");
+//			++i;
+//		}
+//		System.out.print("----------------------\n");
 	}
 	
 	public static void pieceChosen()
@@ -93,13 +105,10 @@ public class StateManager
 	}
 	
 	private static void reconfigure()
-	{	
-		piecesPanel.reset();
-		tilesPanel.reset();
-		
+	{			
 		infoPanel = new InfoPanel();
 		tilesPanel.setBoard(board);
-		piecesPanel.setBoard(tilesPanel.getBoard());
+		piecesPanel.setBoard(board);
 		
 		gameWindow.configure(board, infoPanel, piecesPanel, tilesPanel);
 	}

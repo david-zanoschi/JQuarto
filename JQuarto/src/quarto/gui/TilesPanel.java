@@ -160,21 +160,6 @@ public class TilesPanel extends JPanel
 			tileLabelMouseListenerMap.put(label, mouseListener);
 		}
 	}
-	
-	public void reset() 
-	{
-		// remove mouse listeners
-		Iterator<Entry<JLabel, MouseListener>> mapIterator = this.tileLabelMouseListenerMap. entrySet().iterator();
-		while(mapIterator.hasNext())
-		{
-			JLabel label = mapIterator.next().getKey();
-			label.removeMouseListener(tileLabelMouseListenerMap.get(label));
-		}
-		
-		// reset tiles configuration
-		this.tileLabelTileMap = new HashMap<>();
-		this.tileLabelMouseListenerMap = new HashMap<>();
-	}
 }
 
 
