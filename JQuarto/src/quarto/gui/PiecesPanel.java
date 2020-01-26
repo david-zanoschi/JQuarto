@@ -7,6 +7,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -41,7 +42,7 @@ public class PiecesPanel extends JPanel
 	}
 	
 	private void configure()
-	{
+	{	
 		this.setLayout(new GridLayout(PIECES_PER_COLUMN, PIECES_PER_ROW));
 		this.setSize(new Dimension(PIECES_PANEL_WIDTH, PIECES_PANEL_HEIGHT));
 	}
@@ -60,16 +61,18 @@ public class PiecesPanel extends JPanel
 	{
 		this.removeAll();
 		
-		for(int i = 0; i < this.board.getRemainingPieces().size(); i++)
+		List<Piece> remainingPieces = this.board.getRemainingPieces();
+		
+		for(int i = 0; i < remainingPieces.size(); i++)
 		{
 			JLabel pieceLabel = new JLabel();
 			
-			pieceLabel.setOpaque(true);
-			if(this.board.getRemainingPieces().get(i) != null)
+			if(remainingPieces.get(i) != null)
 			{
-				pieceLabel.setIcon(GuiHelper.PIECES_ICONS.get(this.board.getRemainingPieces().get(i).getPieceNumberAsString()));
+				pieceLabel.setIcon(GuiHelper.PIECES_ICONS.get(remainingPieces.get(i).getPieceNumberAsString()));
+				pieceLabel.setOpaque(true);
 				
-				pieceLabelPieceMap.put(pieceLabel, this.board.getRemainingPieces().get(i));
+				pieceLabelPieceMap.put(pieceLabel, remainingPieces.get(i));
 				pieceLabelMouseListenerMap.put(pieceLabel, null);
 			}
 			
@@ -163,6 +166,21 @@ public class PiecesPanel extends JPanel
 			label.addMouseListener(mouseListener);
 			this.pieceLabelMouseListenerMap.put(label, mouseListener);
 		}
+	}
+	
+	public void reset() 
+	{
+		// remove mouse listeners
+		Iterator<Entry<JLabel, MouseListener>> mapIterator = this.pieceLabelMouseListenerMap. entrySet().iterator();
+		while(mapIterator.hasNext())
+		{
+			JLabel label = mapIterator.next().getKey();
+			label.removeMouseListener(pieceLabelMouseListenerMap.get(label));
+		}
+		
+		// reset panels configuration
+		this.pieceLabelPieceMap = new HashMap<>();
+		this.pieceLabelMouseListenerMap = new HashMap<>();
 	}
 }
 

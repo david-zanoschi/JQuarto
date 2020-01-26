@@ -175,6 +175,14 @@ public class Board
 		{
 			return new Board(this);
 		}
+		
+		public void reset() 
+		{
+			for(final Piece piece : Piece.ALL_PIECES) 
+			{
+				piece.reset();
+			}
+		}
 	}
 }
 

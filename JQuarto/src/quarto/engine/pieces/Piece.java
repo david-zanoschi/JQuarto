@@ -85,6 +85,12 @@ public class Piece
 		this.isChosen = false;
 	}
 	
+	public void reset() {
+		this.piecePosition = 0;
+		this.isChosen = false;
+		this.isPlaced = false;
+	}
+	
 	public enum PieceType
 	{
 		CHST(PieceColor.LIGHT, PieceHeight.TALL, PieceShape.ROUND, PieceTopper.FLAT),

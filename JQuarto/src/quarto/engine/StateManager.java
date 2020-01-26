@@ -1,6 +1,7 @@
 package quarto.engine;
 
 import quarto.engine.board.Board;
+import quarto.engine.board.Board.Builder;
 import quarto.gui.GameWindow;
 import quarto.gui.InfoPanel;
 import quarto.gui.PiecesPanel;
@@ -8,6 +9,7 @@ import quarto.gui.TilesPanel;
 
 public class StateManager 
 {
+	private static Board board;
 	private static InfoPanel infoPanel;
 	private static PiecesPanel piecesPanel;
 	private static TilesPanel tilesPanel;
@@ -16,28 +18,41 @@ public class StateManager
 	public static boolean isPieceChosen = false;
 	public static boolean isPiecePlaced = false;
 	
-	public StateManager(Board board) 
+	public StateManager() 
 	{
-		configure(board);
+		initializeBoard();
+		configure();
+		run();
 	}
 	
-	private void configure(Board board)
+	private static void configure()
 	{
 		infoPanel = new InfoPanel();
 		piecesPanel = new PiecesPanel(board);
 		tilesPanel = new TilesPanel(board);
+		
 		gameWindow = new GameWindow(board, infoPanel, piecesPanel, tilesPanel);
 	}
 	
-	public void run()
+	public static void initializeBoard()
+	{
+		Builder builder = new Builder();
+		builder.reset();
+		board = builder.build();
+	}
+	
+	public static void run()
 	{
 		infoPanel.setInfo("Choose a piece for your opponent");
 		
 		piecesPanel.drawPieces();
+		piecesPanel.enableMouseListeners();
 		
 		tilesPanel.drawTiles();
 		tilesPanel.disableMouseListeners();
 		
+		gameWindow.addKeyListener();
+		gameWindow.validate();
 		gameWindow.draw();
 	}
 	
@@ -76,7 +91,27 @@ public class StateManager
 			infoPanel.setInfo("Game over.");
 		}
 	}
-
+	
+	private static void reconfigure()
+	{	
+		piecesPanel.reset();
+		tilesPanel.reset();
+		
+		infoPanel = new InfoPanel();
+		tilesPanel.setBoard(board);
+		piecesPanel.setBoard(tilesPanel.getBoard());
+		
+		gameWindow.configure(board, infoPanel, piecesPanel, tilesPanel);
+	}
+	
+	public static void restart()
+	{
+		isPieceChosen = false;
+		isPiecePlaced = false;
+		initializeBoard();
+		reconfigure();
+		run();
+	}
 }
 
 

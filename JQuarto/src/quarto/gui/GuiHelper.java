@@ -28,7 +28,7 @@ public class GuiHelper
 		
 		try
 		{
-			tileBufferedImage = ImageIO.read(new File("res/"+ iconPath + ".png"));
+			tileBufferedImage = ImageIO.read(new File("JQuarto/res/"+ iconPath + ".png"));
 		}
 		catch (IOException e) 
 		{
@@ -54,7 +54,7 @@ public class GuiHelper
 			
 			try 
 			{
-				pieceBufferedImage = ImageIO.read(new File("res/" + key + ".png"));
+				pieceBufferedImage = ImageIO.read(new File("JQuarto/res/" + key + ".png"));
 			} 
 			catch (IOException e) 
 			{
