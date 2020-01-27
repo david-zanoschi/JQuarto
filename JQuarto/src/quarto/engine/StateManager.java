@@ -59,13 +59,13 @@ public class StateManager
 		gameWindow.addKeyListener();
 		gameWindow.validate();
 		gameWindow.draw();
-		
-		// ai
-		System.out.print(AiHelper.getCurrentJQS(tilesPanel.getBoard()));
 	}
 	
 	public static void pieceChosen()
 	{
+		// ai
+		System.out.print(AiHelper.getCurrentJQS(tilesPanel.getBoard()));
+		
 		isPieceChosen = true;
 		isPiecePlaced = false;
 		
