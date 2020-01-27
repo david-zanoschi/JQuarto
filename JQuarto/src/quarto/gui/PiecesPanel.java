@@ -145,7 +145,7 @@ public class PiecesPanel extends JPanel
 						isMouseListenerEnabled && areMouseListenersEnabled)
 					{
 						label.setBackground(new Color(133, 133, 133));	
-					}
+					}					
 				}
 				
 				@Override

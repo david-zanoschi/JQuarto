@@ -2,9 +2,11 @@ package quarto.engine;
 
 import java.util.Set;
 
+import quarto.ai.AiHelper;
 import quarto.engine.board.Board;
 import quarto.engine.board.Board.Builder;
 import quarto.gui.GameWindow;
+import quarto.gui.GuiHelper;
 import quarto.gui.InfoPanel;
 import quarto.gui.PiecesPanel;
 import quarto.gui.TilesPanel;
@@ -22,7 +24,7 @@ public class StateManager
 	public static boolean isPiecePlaced = false;
 	
 	public StateManager() 
-	{
+	{		
 		initializeBoard();
 		configure();
 		run();
@@ -46,7 +48,7 @@ public class StateManager
 	
 	public static void run()
 	{
-		infoPanel.setInfo("Choose a piece for your opponent");
+		infoPanel.setInfo(GuiHelper.CHOOSE_PIECE);
 		
 		piecesPanel.drawPieces();
 		piecesPanel.enableMouseListeners();
@@ -58,14 +60,8 @@ public class StateManager
 		gameWindow.validate();
 		gameWindow.draw();
 		
-//		Set<Thread> threadSet = Thread.getAllStackTraces().keySet();
-//		int i = 0;
-//		for(final Thread thread : threadSet) 
-//		{
-//			System.out.print(i + ") " + thread.getName() + ", " + thread.isDaemon() + "\n");
-//			++i;
-//		}
-//		System.out.print("----------------------\n");
+		// ai
+		System.out.print(AiHelper.getCurrentJQS(tilesPanel.getBoard()));
 	}
 	
 	public static void pieceChosen()
@@ -73,7 +69,7 @@ public class StateManager
 		isPieceChosen = true;
 		isPiecePlaced = false;
 		
-		infoPanel.setInfo("Place chosen piece on table");
+		infoPanel.setInfo(GuiHelper.PLACE_PIECE);
 		
 		piecesPanel.disableMouseListeners();
 		
@@ -86,7 +82,7 @@ public class StateManager
 		isPieceChosen = false;
 		isPiecePlaced = true;
 		
-		infoPanel.setInfo("Choose a piece for your opponent");
+		infoPanel.setInfo(GuiHelper.CHOOSE_PIECE);
 		
 		tilesPanel.updateTiles();
 		tilesPanel.disableMouseListeners();
@@ -100,8 +96,11 @@ public class StateManager
 			tilesPanel.disableMouseListeners();
 			piecesPanel.disableMouseListeners();
 			
-			infoPanel.setInfo("Game over.");
+			infoPanel.setInfo(GuiHelper.GAME_OVER);
 		}
+		
+		// ai
+		System.out.print(AiHelper.getCurrentJQS(tilesPanel.getBoard()));
 	}
 	
 	private static void reconfigure()
@@ -120,6 +119,29 @@ public class StateManager
 		initializeBoard();
 		reconfigure();
 		run();
+	}
+	
+	
+	// Threads
+	public static Set<Thread> threadSet;
+	
+	public static Set<Thread> getThreads() 
+	{
+		return Thread.getAllStackTraces().keySet();
+	}
+	
+	public static void logThreads(String location) 
+	{
+		int i = 0;
+		System.out.print(location + ":\n");
+		for(final Thread thread : threadSet) 
+		{
+			System.out.print(i + ") " + thread.toString() + "\n");
+			
+			++i;
+		}
+		System.out.print("Runs on edt: " + javax.swing.SwingUtilities.isEventDispatchThread() + "\n");
+		System.out.print("----------------------\n");
 	}
 }
 

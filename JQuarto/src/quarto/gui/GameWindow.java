@@ -88,6 +88,11 @@ public class GameWindow
 				{
 					StateManager.restart();
 				}
+				
+				if(e.getKeyChar() == KeyEvent.VK_ESCAPE)
+				{
+					gameWindow.dispose();
+				}
 			}
 		});
 	}
