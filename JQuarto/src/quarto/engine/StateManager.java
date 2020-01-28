@@ -62,10 +62,7 @@ public class StateManager
 	}
 	
 	public static void pieceChosen()
-	{
-		// ai
-		System.out.print(AiHelper.getCurrentJQS(tilesPanel.getBoard()));
-		
+	{		
 		isPieceChosen = true;
 		isPiecePlaced = false;
 		
@@ -75,10 +72,13 @@ public class StateManager
 		
 		tilesPanel.updateTiles();
 		tilesPanel.enableMouseListeners();
+		
+		// ai
+		System.out.print(AiHelper.getCurrentJQS(tilesPanel.getBoard()));
 	}
 	
 	public static void piecePlaced()
-	{
+	{		
 		isPieceChosen = false;
 		isPiecePlaced = true;
 		
