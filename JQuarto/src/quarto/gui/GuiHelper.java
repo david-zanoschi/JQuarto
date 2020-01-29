@@ -19,7 +19,7 @@ public class GuiHelper
 	
 	public final static String CHOOSE_PIECE = "Choose a piece for your opponent";
 	public final static String PLACE_PIECE = "Place the chosen piece on the table";
-	public final static String GAME_OVER = "Game over.";
+	public final static String DRAW = "Draw.";
 	
 	public final static ImageIcon TILE_ICON = getTileIcon(DEFAULT_PIECE_SLOT_ICON_PATH);
 	public final static ImageIcon ALTERNATE_TILE_ICON = getTileIcon(ALTERNATE_PIECE_SLOT_ICON_PATH);
@@ -84,6 +84,11 @@ public class GuiHelper
 		}
 		
 		return result;
+	}
+	
+	public static String computeGameOverMessage(String playerName)
+	{
+		return "Game over. Player " + playerName + " won";
 	}
 }
 

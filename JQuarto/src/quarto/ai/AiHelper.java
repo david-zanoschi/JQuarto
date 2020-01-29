@@ -10,7 +10,7 @@ public class AiHelper
 		StringBuilder stringBuilder = new StringBuilder();
 		
 		// player
-		stringBuilder.append(board.isFirstPlayer() ? "1" : "2");
+		stringBuilder.append(board.getCurrentPlayerString());
 		
 		// piece
 		Piece chosenPiece = board.getChosenPiece();
@@ -24,9 +24,13 @@ public class AiHelper
 		stringBuilder.append(",");
 		
 		// game over
-		if(board.isGameOver())
+		if (board.isGameOver())
 		{
 			stringBuilder.append(board.isFirstPlayer() ? "1\n" : "2\n");
+		}
+		else if (board.isDraw())
+		{
+			stringBuilder.append("0\n");
 		}
 		
 		return stringBuilder.toString();

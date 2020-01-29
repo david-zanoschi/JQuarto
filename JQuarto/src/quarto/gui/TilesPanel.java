@@ -147,7 +147,9 @@ public class TilesPanel extends JPanel
 						board.setChosenPiece();
 						Piece chosenPiece = board.getChosenPiece();
 						chosenPiece.place(tileLabelTileMap.get(label).getCoordinate());
+						
 						board = board.update();
+						
 						label.setIcon(GuiHelper.PIECE_SLOTS_ICONS.get(chosenPiece.getPieceNumberAsString() + "Slot"));
 						
 						isMouseListenerEnabled = false;

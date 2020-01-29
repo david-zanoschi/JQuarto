@@ -83,26 +83,37 @@ public class StateManager
 		
 		tilesPanel.updateTiles();
 		tilesPanel.disableMouseListeners();
-
+		
 		piecesPanel.setBoard(tilesPanel.getBoard());
 		piecesPanel.updatePieces();
 		piecesPanel.enableMouseListeners();
+		
+		// ai
+		System.out.print(AiHelper.getCurrentJQS(tilesPanel.getBoard()));
 		
 		if(tilesPanel.getBoard().isGameOver())
 		{
 			tilesPanel.disableMouseListeners();
 			piecesPanel.disableMouseListeners();
 			
-			infoPanel.setInfo(GuiHelper.GAME_OVER);
+			infoPanel.setInfo(GuiHelper.computeGameOverMessage(tilesPanel.getBoard().getCurrentPlayerString()));
+		} 
+		else if(tilesPanel.getBoard().isDraw())
+		{
+			tilesPanel.disableMouseListeners();
+			piecesPanel.disableMouseListeners();
+			
+			infoPanel.setInfo(GuiHelper.DRAW);
 		}
-		
-		// ai
-		System.out.print(AiHelper.getCurrentJQS(tilesPanel.getBoard()));
+		else
+		{			
+			tilesPanel.getBoard().nextPlayer();
+		}
 	}
 	
 	private static void reconfigure()
-	{			
-		infoPanel = new InfoPanel();
+	{
+		board.setFirstPlayer();
 		tilesPanel.setBoard(board);
 		piecesPanel.setBoard(board);
 		

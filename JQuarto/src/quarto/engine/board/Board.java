@@ -30,6 +30,21 @@ public class Board
 		return isFirstPlayer;
 	}
 	
+	public String getCurrentPlayerString() 
+	{
+		return isFirstPlayer ? "1" : "2";
+	}
+	
+	public void nextPlayer() 
+	{
+		isFirstPlayer = !isFirstPlayer;
+	}
+	
+	public void setFirstPlayer() 
+	{
+		isFirstPlayer = true;
+	}
+	
 	public List<Piece> getPlacedPieces()
 	{
 		return this.placedPieces;
@@ -48,11 +63,6 @@ public class Board
 	public Tile getTile(int tileCoordinate)
 	{
 		return this.gameBoard.get(tileCoordinate);
-	}
-	
-	public void nextPlayer() 
-	{
-		isFirstPlayer = !isFirstPlayer;
 	}
 	
 	public Piece getChosenPiece() 
@@ -123,6 +133,18 @@ public class Board
 			}
 		}
 
+		return false;
+	}
+	
+	public boolean isDraw()
+	{
+		List<Piece> placedPieces = this.computePlacedPieces();
+		
+		if(placedPieces.size() == Piece.ALL_PIECES.size() && !this.isGameOver())
+		{
+			return true;
+		}
+		
 		return false;
 	}
 	
