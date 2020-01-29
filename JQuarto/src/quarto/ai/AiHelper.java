@@ -1,32 +1,34 @@
 package quarto.ai;
 
 import quarto.engine.board.Board;
-import quarto.engine.board.BoardHelper;
-import quarto.engine.board.Tile;
+import quarto.engine.pieces.Piece;
 
 public class AiHelper 
-{
-	private static String EMPTY_TILE_SYMBOL = "0";
-	
+{	
 	public static String getCurrentJQS(Board board) 
 	{
 		StringBuilder stringBuilder = new StringBuilder();
 		
-		int i = 0;
-		for(final Tile tile : board.getGameBoard())
+		// player
+		stringBuilder.append(board.isFirstPlayer() ? "1" : "2");
+		
+		// piece
+		Piece chosenPiece = board.getChosenPiece();
+		// piece type
+		stringBuilder.append(chosenPiece.getType().toString());
+		// piece position
+		int piecePosition = chosenPiece.getPosition();
+		stringBuilder.append(piecePosition < 10 ? "0" + piecePosition : piecePosition);
+		
+		// separator
+		stringBuilder.append(",");
+		
+		// game over
+		if(board.isGameOver())
 		{
-			stringBuilder.append(	tile.isOccupied() ? 
-									computeInput(tile.getPieceOnTile().getType().toString(), i) :
-									computeInput(EMPTY_TILE_SYMBOL, i));
-			++i;
+			stringBuilder.append(board.isFirstPlayer() ? "1\n" : "2\n");
 		}
-		stringBuilder.append("\n");
 		
 		return stringBuilder.toString();
-	}
-	
-	private static String computeInput(String input, int i)
-	{
-		return i < BoardHelper.NUM_TILES - 1 ? input + "," : input;
 	}
 }

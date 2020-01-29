@@ -72,9 +72,6 @@ public class StateManager
 		
 		tilesPanel.updateTiles();
 		tilesPanel.enableMouseListeners();
-		
-		// ai
-		System.out.print(AiHelper.getCurrentJQS(tilesPanel.getBoard()));
 	}
 	
 	public static void piecePlaced()

@@ -15,11 +15,19 @@ public class Board
 	private	List<Piece> remainingPieces;
 	private List<Tile> gameBoard;
 	
+	private static boolean isFirstPlayer = true;
+	private static Piece chosenPiece = null;
+	
 	Board(Builder builder)
 	{
 		this.placedPieces = computePlacedPieces();
 		this.remainingPieces = computeRemainingPieces();
 		this.gameBoard = computeGameBoard(builder);
+	}
+	
+	public boolean isFirstPlayer()
+	{
+		return isFirstPlayer;
 	}
 	
 	public List<Piece> getPlacedPieces()
@@ -42,17 +50,25 @@ public class Board
 		return this.gameBoard.get(tileCoordinate);
 	}
 	
-	public Piece getChosenPiece()
+	public void nextPlayer() 
+	{
+		isFirstPlayer = !isFirstPlayer;
+	}
+	
+	public Piece getChosenPiece() 
+	{
+		return chosenPiece;
+	}
+	
+	public void setChosenPiece()
 	{
 		for(Piece piece : this.remainingPieces)
 		{
 			if(piece != null && piece.isChosen() && !piece.isPlaced())
 			{
-				return piece;
+				chosenPiece = piece;
 			}
 		}
-		
-		return null;
 	}
 	
 	public Board update()

@@ -144,6 +144,7 @@ public class TilesPanel extends JPanel
 					if(	!tileLabelTileMap.get(label).isOccupied() &&
 						isMouseListenerEnabled && areMouseListenersEnabled)
 					{
+						board.setChosenPiece();
 						Piece chosenPiece = board.getChosenPiece();
 						chosenPiece.place(tileLabelTileMap.get(label).getCoordinate());
 						board = board.update();
