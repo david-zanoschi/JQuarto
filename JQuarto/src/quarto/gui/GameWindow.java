@@ -3,6 +3,7 @@ package quarto.gui;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.WindowEvent;
 
 import javax.swing.*;
 
@@ -56,6 +57,11 @@ public class GameWindow
 		this.gameWindow.removeAll();
 	}
 	
+	public void close() 
+	{
+		this.gameWindow.dispose();
+	}
+	
 	public void validate()
 	{
 		this.gameWindow.validate();
@@ -91,7 +97,8 @@ public class GameWindow
 				
 				if(e.getKeyChar() == KeyEvent.VK_ESCAPE)
 				{
-					gameWindow.dispose();
+					gameWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+					gameWindow.dispatchEvent(new WindowEvent(gameWindow, WindowEvent.WINDOW_CLOSING));
 				}
 			}
 		});

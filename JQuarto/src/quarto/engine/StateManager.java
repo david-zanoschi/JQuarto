@@ -32,6 +32,13 @@ public class StateManager
 	
 	private static void configure()
 	{
+		if(gameWindow != null) 
+		{
+			gameWindow.close();
+		}
+		
+		board.setFirstPlayer();
+		
 		infoPanel = new InfoPanel();
 		piecesPanel = new PiecesPanel(board);
 		tilesPanel = new TilesPanel(board);
@@ -89,7 +96,7 @@ public class StateManager
 		piecesPanel.enableMouseListeners();
 		
 		// ai
-		System.out.print(AiHelper.getCurrentJQS(tilesPanel.getBoard()));
+		System.out.print(AiHelper.getLastMove(tilesPanel.getBoard()));
 		
 		if(tilesPanel.getBoard().isGameOver())
 		{
@@ -111,21 +118,26 @@ public class StateManager
 		}
 	}
 	
-	private static void reconfigure()
-	{
-		board.setFirstPlayer();
-		tilesPanel.setBoard(board);
-		piecesPanel.setBoard(board);
-		
-		gameWindow.configure(board, infoPanel, piecesPanel, tilesPanel);
-	}
+//	private static void reconfigure()
+//	{
+//		board.setFirstPlayer();
+//		tilesPanel.setBoard(board);
+//		piecesPanel.setBoard(board);
+//		
+//		gameWindow.configure(board, infoPanel, piecesPanel, tilesPanel);
+//	}
 	
 	public static void restart()
 	{
+		System.out.print(
+				tilesPanel.getBoard().isGameOver() || tilesPanel.getBoard().isDraw() ? "\n" : "X\n");
+		
 		isPieceChosen = false;
 		isPiecePlaced = false;
+		board = null;
+		
 		initializeBoard();
-		reconfigure();
+		configure();
 		run();
 	}
 	

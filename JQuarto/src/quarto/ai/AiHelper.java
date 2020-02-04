@@ -5,7 +5,7 @@ import quarto.engine.pieces.Piece;
 
 public class AiHelper 
 {	
-	public static String getCurrentJQS(Board board) 
+	public static String getLastMove(Board board) 
 	{
 		StringBuilder stringBuilder = new StringBuilder();
 		
@@ -26,11 +26,11 @@ public class AiHelper
 		// game over
 		if (board.isGameOver())
 		{
-			stringBuilder.append(board.isFirstPlayer() ? "1\n" : "2\n");
+			stringBuilder.append(board.isFirstPlayer() ? "1" : "2");
 		}
 		else if (board.isDraw())
 		{
-			stringBuilder.append("0\n");
+			stringBuilder.append("0");
 		}
 		
 		return stringBuilder.toString();
