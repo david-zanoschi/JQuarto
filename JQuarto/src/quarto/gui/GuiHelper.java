@@ -10,6 +10,7 @@ import java.util.Map;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 
+import quarto.engine.board.Board;
 import quarto.engine.pieces.Piece;
 
 public class GuiHelper 
@@ -51,10 +52,10 @@ public class GuiHelper
 	{
 		Map<String, ImageIcon> result = new HashMap<String, ImageIcon>();
 		
-		for(Piece piece : Piece.ALL_PIECES)
+		for(String pieceNumber : Board.PIECES_NUMBERS_STRINGS)
 		{
 			BufferedImage pieceBufferedImage = null;
-			String key = piece.getPieceNumberAsString() + input;
+			String key = pieceNumber + input;
 			
 			try 
 			{

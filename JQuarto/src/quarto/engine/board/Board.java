@@ -8,15 +8,19 @@ import java.util.List;
 import java.util.Map;
 
 import quarto.engine.pieces.Piece;
+import quarto.engine.pieces.Piece.PieceType;
 
 public class Board 
 {
+	public final List<Piece> ALL_PIECES = createAllPieces();
+	public final static List<String> PIECES_NUMBERS_STRINGS = getAllPiecesNumbersAsStrings();
+	
 	private List<Piece> placedPieces;
 	private	List<Piece> remainingPieces;
 	private List<Tile> gameBoard;
 	
-	private static boolean isFirstPlayer = true;
-	private static Piece chosenPiece = null;
+	private boolean isFirstPlayer = true;
+	private Piece chosenPiece = null;
 	
 	Board(Builder builder)
 	{
@@ -27,22 +31,22 @@ public class Board
 	
 	public boolean isFirstPlayer()
 	{
-		return isFirstPlayer;
+		return this.isFirstPlayer;
 	}
 	
 	public String getCurrentPlayerString() 
 	{
-		return isFirstPlayer ? "1" : "2";
+		return this.isFirstPlayer ? "1" : "2";
 	}
 	
 	public void nextPlayer() 
 	{
-		isFirstPlayer = !isFirstPlayer;
+		this.isFirstPlayer = !this.isFirstPlayer;
 	}
 	
 	public void setFirstPlayer() 
 	{
-		isFirstPlayer = true;
+		this.isFirstPlayer = true;
 	}
 	
 	public List<Piece> getPlacedPieces()
@@ -67,7 +71,7 @@ public class Board
 	
 	public Piece getChosenPiece() 
 	{
-		return chosenPiece;
+		return this.chosenPiece;
 	}
 	
 	public void setChosenPiece()
@@ -76,9 +80,50 @@ public class Board
 		{
 			if(piece != null && piece.isChosen() && !piece.isPlaced())
 			{
-				chosenPiece = piece;
+				this.chosenPiece = piece;
 			}
 		}
+	}
+	
+	private static List<Piece> createAllPieces()
+	{
+		List<Piece> allPieces = new ArrayList<>();
+		
+		// whites
+		allPieces.add(new Piece(PieceType.CHST, 0));
+		allPieces.add(new Piece(PieceType.CHSt, 1));
+		allPieces.add(new Piece(PieceType.ChST, 2));
+		allPieces.add(new Piece(PieceType.ChSt, 3));
+		
+		allPieces.add(new Piece(PieceType.CHsT, 4));
+		allPieces.add(new Piece(PieceType.CHst, 5));
+		allPieces.add(new Piece(PieceType.ChsT, 6));
+		allPieces.add(new Piece(PieceType.Chst, 7));
+		
+		// blacks
+		allPieces.add(new Piece(PieceType.cHST, 8));
+		allPieces.add(new Piece(PieceType.cHSt, 9));
+		allPieces.add(new Piece(PieceType.chST, 10));
+		allPieces.add(new Piece(PieceType.chSt, 11));
+
+		allPieces.add(new Piece(PieceType.cHsT, 12));
+		allPieces.add(new Piece(PieceType.cHst, 13));
+		allPieces.add(new Piece(PieceType.chsT, 14));
+		allPieces.add(new Piece(PieceType.chst, 15));
+		
+		return allPieces;
+	}
+	
+	private static List<String> getAllPiecesNumbersAsStrings()
+	{
+		List<String> result = new ArrayList<>();
+		
+		for(Piece piece : createAllPieces())
+		{
+			result.add(piece.getPieceNumberAsString());
+		}
+		
+		return result;
 	}
 	
 	public Board update()
@@ -140,9 +185,10 @@ public class Board
 	{
 		List<Piece> placedPieces = this.computePlacedPieces();
 		
-		if(placedPieces.size() == Piece.ALL_PIECES.size() && !this.isGameOver())
+		if(placedPieces.size() == this.ALL_PIECES.size() && !this.isGameOver())
 		{
-			return true;
+			// return true;
+			return false;
 		}
 		
 		return false;
@@ -164,7 +210,7 @@ public class Board
 	{
 		List<Piece> placedPieces = new ArrayList<Piece>();
 		
-		for(final Piece piece : Piece.ALL_PIECES)
+		for(final Piece piece : this.ALL_PIECES)
 		{
 			if(piece.isPlaced())
 			{
@@ -179,7 +225,7 @@ public class Board
 	{
 		List<Piece> remainingPieces = new ArrayList<Piece>();
 		
-		for(final Piece piece : Piece.ALL_PIECES)
+		for(final Piece piece : this.ALL_PIECES)
 		{
 			if(!piece.isPlaced())
 			{
@@ -192,6 +238,14 @@ public class Board
 		}
 		
 		return remainingPieces;
+	}
+	
+	public void resetPieces() 
+	{
+		for(final Piece piece : ALL_PIECES) 
+		{
+			piece.reset();
+		}
 	}
 	
 	public static class Builder
@@ -212,14 +266,6 @@ public class Board
 		public Board build()
 		{
 			return new Board(this);
-		}
-		
-		public void reset() 
-		{
-			for(final Piece piece : Piece.ALL_PIECES) 
-			{
-				piece.reset();
-			}
 		}
 	}
 }

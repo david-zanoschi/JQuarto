@@ -1,51 +1,17 @@
 package quarto.engine.pieces;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class Piece 
-{
-	public final static List<Piece> ALL_PIECES = createAllPieces();
-	
+{	
 	protected int piecePosition;
 	protected final PieceType pieceType;
 	protected final Integer pieceNumber;
 	protected boolean isChosen = false;
 	protected boolean isPlaced = false;
 	
-	Piece(final PieceType pieceType, final Integer pieceNumber)
+	public Piece(final PieceType pieceType, final Integer pieceNumber)
 	{
 		this.pieceType = pieceType;
 		this.pieceNumber = pieceNumber;
-	}
-	
-	private static List<Piece> createAllPieces()
-	{
-		List<Piece> allPieces = new ArrayList<>();
-		
-		// whites
-		allPieces.add(new Piece(PieceType.CHST, 0));
-		allPieces.add(new Piece(PieceType.CHSt, 1));
-		allPieces.add(new Piece(PieceType.ChST, 2));
-		allPieces.add(new Piece(PieceType.ChSt, 3));
-		
-		allPieces.add(new Piece(PieceType.CHsT, 4));
-		allPieces.add(new Piece(PieceType.CHst, 5));
-		allPieces.add(new Piece(PieceType.ChsT, 6));
-		allPieces.add(new Piece(PieceType.Chst, 7));
-		
-		// blacks
-		allPieces.add(new Piece(PieceType.cHST, 8));
-		allPieces.add(new Piece(PieceType.cHSt, 9));
-		allPieces.add(new Piece(PieceType.chST, 10));
-		allPieces.add(new Piece(PieceType.chSt, 11));
-
-		allPieces.add(new Piece(PieceType.cHsT, 12));
-		allPieces.add(new Piece(PieceType.cHst, 13));
-		allPieces.add(new Piece(PieceType.chsT, 14));
-		allPieces.add(new Piece(PieceType.chst, 15));
-		
-		return allPieces;
 	}
 	
 	public int getPosition()
@@ -85,9 +51,16 @@ public class Piece
 		this.isChosen = false;
 	}
 	
-	public void reset() {
+	public void reset() 
+	{
 		this.piecePosition = 0;
 		this.isChosen = false;
+		this.isPlaced = false;
+	}
+	
+	public void resetPosition() 
+	{
+		this.piecePosition = 0;
 		this.isPlaced = false;
 	}
 	

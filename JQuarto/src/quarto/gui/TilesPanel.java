@@ -1,12 +1,16 @@
 package quarto.gui;
 
+import java.awt.AWTException;
 import java.awt.GridLayout;
+import java.awt.Point;
+import java.awt.event.InputEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.awt.Robot;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -144,7 +148,6 @@ public class TilesPanel extends JPanel
 					if(	!tileLabelTileMap.get(label).isOccupied() &&
 						isMouseListenerEnabled && areMouseListenersEnabled)
 					{
-						board.setChosenPiece();
 						Piece chosenPiece = board.getChosenPiece();
 						chosenPiece.place(tileLabelTileMap.get(label).getCoordinate());
 						
@@ -162,6 +165,37 @@ public class TilesPanel extends JPanel
 			label.addMouseListener(mouseListener);
 			tileLabelMouseListenerMap.put(label, mouseListener);
 		}
+	}
+	
+	public void simulateClick(int tileCoordinate) 
+	{
+		Iterator<Entry<JLabel, Tile>> mapIterator = tileLabelTileMap.entrySet().iterator();
+		
+		while(mapIterator.hasNext())
+		{
+			Tile tile = mapIterator.next().getValue();
+			
+			if(tile.getCoordinate() == tileCoordinate)
+			{
+				JLabel label = mapIterator.next().getKey();
+				Point originPoint = label.getLocationOnScreen();
+				
+				try 
+				{
+					Robot robot = new Robot();
+					robot.mouseMove(originPoint.x + 1, originPoint.y + 1);
+					robot.mousePress(InputEvent.BUTTON1_DOWN_MASK);
+					robot.mouseRelease(InputEvent.BUTTON1_DOWN_MASK);
+				}
+				catch (AWTException e) 
+				{
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			
+		}
+		
 	}
 }
 

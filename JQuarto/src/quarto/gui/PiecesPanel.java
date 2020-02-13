@@ -154,9 +154,10 @@ public class PiecesPanel extends JPanel
 					if(isMouseListenerEnabled && areMouseListenersEnabled)
 					{
 						label.setBackground(new Color(24, 179, 0));
-						pieceLabelPieceMap.get(label).choose();
-						
 						isMouseListenerEnabled = false;
+						
+						pieceLabelPieceMap.get(label).choose();
+						board.setChosenPiece();
 						
 						StateManager.pieceChosen();
 					}
