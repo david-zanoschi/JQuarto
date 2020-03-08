@@ -6,7 +6,6 @@ import quarto.ai.AiHelper;
 import quarto.engine.board.Board;
 import quarto.engine.board.Board.Builder;
 import quarto.engine.board.Tile;
-import quarto.engine.pieces.Piece;
 import quarto.gui.GameWindow;
 import quarto.gui.GuiHelper;
 import quarto.gui.InfoPanel;
@@ -27,6 +26,10 @@ public class StateManager
 	
 	public StateManager() 
 	{		
+	}
+	
+	public void start()
+	{
 		initializeBoard();
 		configure();
 		run();
@@ -65,7 +68,7 @@ public class StateManager
 		tilesPanel.disableMouseListeners();
 		
 		gameWindow.addKeyListener();
-		gameWindow.validate();
+		gameWindow.setFramePosition();
 		gameWindow.draw();
 	}
 	
@@ -82,12 +85,12 @@ public class StateManager
 		tilesPanel.enableMouseListeners();
 		
 		// create transposition tree using a copy of the board
-		Builder builder = new Builder();
-		for(Tile tile : tilesPanel.getBoard().getGameBoard())
-		{
-			builder.setPiece(tile.getPieceOnTile());
-		}
-		AiHelper.createTranspositionTree(builder.build());
+//		Builder builder = new Builder();
+//		for(Tile tile : tilesPanel.getBoard().getGameBoard())
+//		{
+//			builder.setPiece(tile.getPieceOnTile());
+//		}
+//		AiHelper.createTranspositionTree(builder.build());
 	}
 	
 	public static void piecePlaced()

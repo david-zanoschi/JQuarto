@@ -22,7 +22,7 @@ public class GameWindow
 						PiecesPanel piecesPanel,
 						TilesPanel tilesPanel) 
 	{
-		this.gameWindow = new JFrame("JQuarto");	
+		this.gameWindow = new JFrame("JQuarto");
 		this.configure(board, infoPanel, piecesPanel, tilesPanel);
 	}
 	
@@ -37,6 +37,17 @@ public class GameWindow
 		
 		this.gameWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.gameWindow.setResizable(false);
+		gameWindow.validate();
+		this.setFramePosition();
+	}
+	
+	// call this method only after inserting all panels and labels in the main window
+	public void setFramePosition()
+	{
+		this.gameWindow.pack();
+		Dimension screenDimension = Toolkit.getDefaultToolkit().getScreenSize();
+		this.gameWindow.setLocation(screenDimension.width / 2 - this.gameWindow.getWidth(),
+									screenDimension.height / 2 - this.gameWindow.getHeight());
 	}
 	
 	@SuppressWarnings("exports")
