@@ -60,22 +60,19 @@ public class PiecesPanel extends JPanel
 	public void drawPieces()
 	{
 		this.removeAll();
-		
-		List<Piece> remainingPieces = this.board.getRemainingPieces();
-		
-		for(int i = 0; i < remainingPieces.size(); i++)
+
+		for (Piece remainingPiece : this.board.getRemainingPieces())
 		{
 			JLabel pieceLabel = new JLabel();
-			
-			if(remainingPieces.get(i) != null)
-			{
-				pieceLabel.setIcon(GuiHelper.PIECES_ICONS.get(remainingPieces.get(i).getPieceNumberAsString()));
+
+			if (remainingPiece != null) {
+				pieceLabel.setIcon(GuiHelper.PIECES_ICONS.get(remainingPiece.getPieceNumberAsString()));
 				pieceLabel.setOpaque(true);
-				
-				pieceLabelPieceMap.put(pieceLabel, remainingPieces.get(i));
+
+				pieceLabelPieceMap.put(pieceLabel, remainingPiece);
 				pieceLabelMouseListenerMap.put(pieceLabel, null);
 			}
-			
+
 			this.add(pieceLabel);
 		}
 		

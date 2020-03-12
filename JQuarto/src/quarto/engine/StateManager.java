@@ -2,10 +2,8 @@ package quarto.engine;
 
 import java.util.Set;
 
-import quarto.ai.AiHelper;
 import quarto.engine.board.Board;
 import quarto.engine.board.Board.Builder;
-import quarto.engine.board.Tile;
 import quarto.gui.GameWindow;
 import quarto.gui.GuiHelper;
 import quarto.gui.InfoPanel;
@@ -34,6 +32,12 @@ public class StateManager
 		configure();
 		run();
 	}
+
+	public static void initializeBoard()
+	{
+		Builder builder = new Builder();
+		board = builder.build();
+	}
 	
 	private static void configure()
 	{
@@ -49,12 +53,6 @@ public class StateManager
 		tilesPanel = new TilesPanel(board);
 		
 		gameWindow = new GameWindow(board, infoPanel, piecesPanel, tilesPanel);
-	}
-	
-	public static void initializeBoard()
-	{
-		Builder builder = new Builder();
-		board = builder.build();
 	}
 	
 	public static void run()

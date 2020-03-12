@@ -187,8 +187,7 @@ public class Board
 		
 		if(placedPieces.size() == this.ALL_PIECES.size() && !this.isGameOver())
 		{
-			// return true;
-			return false;
+			return true;
 		}
 		
 		return false;
@@ -203,7 +202,7 @@ public class Board
 			tiles[i] = Tile.create(i, builder.boardConfiguration.get(i));
 		}
 		
-		return Collections.unmodifiableList(Arrays.asList(tiles));
+		return List.of(tiles);
 	}
 	
 	private List<Piece> computePlacedPieces()
