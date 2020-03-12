@@ -36,6 +36,7 @@ public class StateManager
 	public static void initializeBoard()
 	{
 		Builder builder = new Builder();
+		builder.reset();
 		board = builder.build();
 	}
 	
@@ -127,15 +128,6 @@ public class StateManager
 			tilesPanel.getBoard().nextPlayer();
 		}
 	}
-	
-//	private static void reconfigure()
-//	{
-//		board.setFirstPlayer();
-//		tilesPanel.setBoard(board);
-//		piecesPanel.setBoard(board);
-//		
-//		gameWindow.configure(board, infoPanel, piecesPanel, tilesPanel);
-//	}
 	
 	public static void restart()
 	{

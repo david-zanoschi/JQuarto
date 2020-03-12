@@ -88,7 +88,7 @@ public class Piece
 		private PieceShape pieceShape;
 		private PieceTopper pieceTopper;
 		
-		private PieceType(	final PieceColor pieceColor,
+		PieceType(	final PieceColor pieceColor,
 							final PieceHeight pieceHeight,
 							final PieceShape pieceShape,
 							final PieceTopper pieceTopper) 
@@ -116,7 +116,7 @@ public class Piece
 		
 		private String color;
 		
-		private PieceColor(final String color)
+		PieceColor(final String color)
 		{
 			this.color = color;
 		}
@@ -135,7 +135,7 @@ public class Piece
 		
 		private String height;
 		
-		private PieceHeight(final String height)
+		PieceHeight(final String height)
 		{
 			this.height = height;
 		}
@@ -154,7 +154,7 @@ public class Piece
 		
 		private String shape;
 		
-		private PieceShape(final String shape)
+		PieceShape(final String shape)
 		{
 			this.shape = shape;
 		}
@@ -173,7 +173,7 @@ public class Piece
 		
 		private String topper;
 		
-		private PieceTopper(final String topper)
+		PieceTopper(final String topper)
 		{
 			this.topper = topper;
 		}

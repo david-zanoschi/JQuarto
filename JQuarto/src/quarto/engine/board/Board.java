@@ -1,8 +1,6 @@
 package quarto.engine.board;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,14 +10,15 @@ import quarto.engine.pieces.Piece.PieceType;
 
 public class Board 
 {
-	public final List<Piece> ALL_PIECES = createAllPieces();
-	public final static List<String> PIECES_NUMBERS_STRINGS = getAllPiecesNumbersAsStrings();
+	// making this an instance variable messes all up
+	public static final List<Piece> ALL_PIECES = createAllPieces();
+	public static final  List<String> PIECES_NUMBERS_STRINGS = getAllPiecesNumbersAsStrings();
 	
 	private List<Piece> placedPieces;
 	private	List<Piece> remainingPieces;
 	private List<Tile> gameBoard;
 	
-	private boolean isFirstPlayer = true;
+	private static boolean isFirstPlayer = true;
 	private Piece chosenPiece = null;
 	
 	Board(Builder builder)
@@ -31,22 +30,22 @@ public class Board
 	
 	public boolean isFirstPlayer()
 	{
-		return this.isFirstPlayer;
+		return isFirstPlayer;
 	}
 	
 	public String getCurrentPlayerString() 
 	{
-		return this.isFirstPlayer ? "1" : "2";
+		return isFirstPlayer ? "1" : "2";
 	}
 	
 	public void nextPlayer() 
 	{
-		this.isFirstPlayer = !this.isFirstPlayer;
+		isFirstPlayer = !isFirstPlayer;
 	}
 	
 	public void setFirstPlayer() 
 	{
-		this.isFirstPlayer = true;
+		isFirstPlayer = true;
 	}
 	
 	public List<Piece> getPlacedPieces()
@@ -184,13 +183,8 @@ public class Board
 	public boolean isDraw()
 	{
 		List<Piece> placedPieces = this.computePlacedPieces();
-		
-		if(placedPieces.size() == this.ALL_PIECES.size() && !this.isGameOver())
-		{
-			return true;
-		}
-		
-		return false;
+
+		return placedPieces.size() == ALL_PIECES.size() && !this.isGameOver();
 	}
 	
 	private List<Tile> computeGameBoard(final Builder builder)
@@ -207,9 +201,9 @@ public class Board
 	
 	private List<Piece> computePlacedPieces()
 	{
-		List<Piece> placedPieces = new ArrayList<Piece>();
+		List<Piece> placedPieces = new ArrayList<>();
 		
-		for(final Piece piece : this.ALL_PIECES)
+		for(final Piece piece : ALL_PIECES)
 		{
 			if(piece.isPlaced())
 			{
@@ -222,9 +216,9 @@ public class Board
 	
 	private List<Piece> computeRemainingPieces()
 	{
-		List<Piece> remainingPieces = new ArrayList<Piece>();
+		List<Piece> remainingPieces = new ArrayList<>();
 		
-		for(final Piece piece : this.ALL_PIECES)
+		for(final Piece piece : ALL_PIECES)
 		{
 			if(!piece.isPlaced())
 			{
@@ -237,14 +231,6 @@ public class Board
 		}
 		
 		return remainingPieces;
-	}
-	
-	public void resetPieces() 
-	{
-		for(final Piece piece : ALL_PIECES) 
-		{
-			piece.reset();
-		}
 	}
 	
 	public static class Builder
@@ -260,6 +246,14 @@ public class Board
 		{
 			this.boardConfiguration.put(piece.getPosition(), piece);
 			return this;
+		}
+
+		public void reset()
+		{
+			for(final Piece piece : ALL_PIECES)
+			{
+				piece.reset();
+			}
 		}
 		
 		public Board build()

@@ -78,20 +78,14 @@ public class TilesPanel extends JPanel
 	
 	public void updateTiles()
 	{
-		Iterator<Entry<JLabel, Tile>> mapIterator = tileLabelTileMap.entrySet().iterator();
-		
-		while(mapIterator.hasNext())
-		{
-			Entry<JLabel, Tile> mapElement = mapIterator.next();
-			
-			Tile tile = mapElement.getValue();
-			
-			if(tile.isOccupied())
-			{
+		for (Entry<JLabel, Tile> entry : tileLabelTileMap.entrySet()) {
+			Tile tile = entry.getValue();
+
+			if (tile.isOccupied()) {
 				Piece pieceOnTile = tile.getPieceOnTile();
-				JLabel tileLabel = mapElement.getKey();
+				JLabel tileLabel = entry.getKey();
 				tileLabel.setIcon(GuiHelper.PIECE_SLOTS_ICONS.get(pieceOnTile.getPieceNumberAsString() + "Slot"));
-			}	
+			}
 		}
 	}
 	
@@ -107,61 +101,54 @@ public class TilesPanel extends JPanel
 	
 	private void addMouseListeners() 
 	{
-		Iterator<Entry<JLabel, MouseListener>> mapIterator = this.tileLabelMouseListenerMap. entrySet().iterator();
-		
-		while(mapIterator.hasNext())
-		{
-			JLabel label = mapIterator.next().getKey();
-			
+		for (Entry<JLabel, MouseListener> entry : this.tileLabelMouseListenerMap.entrySet()) {
+			JLabel label = entry.getKey();
+
 			MouseListener mouseListener = new MouseListener() {
 				boolean isMouseListenerEnabled = true;
-				
+
 				@Override
-				public void mouseReleased(MouseEvent e) {}
-				
+				public void mouseReleased(MouseEvent e) {
+				}
+
 				@Override
-				public void mousePressed(MouseEvent e) {}
-				
+				public void mousePressed(MouseEvent e) {
+				}
+
 				@Override
-				public void mouseExited(MouseEvent e) 
-				{
-					if(	!StateManager.isPiecePlaced && 
-						isMouseListenerEnabled && areMouseListenersEnabled)
-					{
+				public void mouseExited(MouseEvent e) {
+					if (!StateManager.isPiecePlaced &&
+							isMouseListenerEnabled && areMouseListenersEnabled) {
 						label.setIcon(GuiHelper.TILE_ICON);
 					}
 				}
-				
+
 				@Override
-				public void mouseEntered(MouseEvent e) 
-				{
-					if(	!StateManager.isPiecePlaced &&
-						isMouseListenerEnabled && areMouseListenersEnabled)
-					{
+				public void mouseEntered(MouseEvent e) {
+					if (!StateManager.isPiecePlaced &&
+							isMouseListenerEnabled && areMouseListenersEnabled) {
 						label.setIcon(GuiHelper.ALTERNATE_TILE_ICON);
 					}
 				}
-				
+
 				@Override
-				public void mouseClicked(MouseEvent e) 
-				{
-					if(	!tileLabelTileMap.get(label).isOccupied() &&
-						isMouseListenerEnabled && areMouseListenersEnabled)
-					{
+				public void mouseClicked(MouseEvent e) {
+					if (!tileLabelTileMap.get(label).isOccupied() &&
+							isMouseListenerEnabled && areMouseListenersEnabled) {
 						Piece chosenPiece = board.getChosenPiece();
 						chosenPiece.place(tileLabelTileMap.get(label).getCoordinate());
 
 						board = board.update();
-						
+
 						label.setIcon(GuiHelper.PIECE_SLOTS_ICONS.get(chosenPiece.getPieceNumberAsString() + "Slot"));
-						
+
 						isMouseListenerEnabled = false;
-						
+
 						StateManager.piecePlaced();
 					}
 				}
 			};
-			
+
 			label.addMouseListener(mouseListener);
 			tileLabelMouseListenerMap.put(label, mouseListener);
 		}
@@ -189,7 +176,6 @@ public class TilesPanel extends JPanel
 				}
 				catch (AWTException e) 
 				{
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}

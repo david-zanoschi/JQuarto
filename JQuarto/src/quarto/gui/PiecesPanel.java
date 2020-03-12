@@ -6,8 +6,6 @@ import java.awt.GridLayout;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -81,16 +79,11 @@ public class PiecesPanel extends JPanel
 	
 	public void updatePieces()
 	{
-		Iterator<Entry<JLabel, Piece>> mapIterator = pieceLabelPieceMap.entrySet().iterator();
-		
-		while(mapIterator.hasNext())
-		{
-			Entry<JLabel, Piece> mapElement = mapIterator.next();
-			Piece piece = mapElement.getValue();
-			
-			if(!this.board.getRemainingPieces().contains(piece))
-			{
-				JLabel pieceLabel = mapElement.getKey();
+		for (Entry<JLabel, Piece> entry : pieceLabelPieceMap.entrySet()) {
+			Piece piece = entry.getValue();
+
+			if (!this.board.getRemainingPieces().contains(piece)) {
+				JLabel pieceLabel = entry.getKey();
 				pieceLabel.setIcon(null);
 				pieceLabel.setOpaque(false);
 			}
@@ -109,58 +102,52 @@ public class PiecesPanel extends JPanel
 	
 	private void addMouseListeners()
 	{
-		Iterator<Entry<JLabel, MouseListener>> mapIterator = this.pieceLabelMouseListenerMap.entrySet().iterator();
-		
-		while(mapIterator.hasNext())
-		{
-			JLabel label = mapIterator.next().getKey();
-			
-			MouseListener mouseListener = new MouseListener() 
-			{
+		for (Entry<JLabel, MouseListener> entry : this.pieceLabelMouseListenerMap.entrySet()) {
+			JLabel label = entry.getKey();
+
+			MouseListener mouseListener = new MouseListener() {
 				boolean isMouseListenerEnabled = true;
-				
+
 				@Override
-				public void mouseReleased(MouseEvent e) {}
-				
+				public void mouseReleased(MouseEvent e) {
+				}
+
 				@Override
-				public void mousePressed(MouseEvent e) {}
-				
+				public void mousePressed(MouseEvent e) {
+				}
+
 				@Override
-				public void mouseExited(MouseEvent e) 
-				{
-					if(	!StateManager.isPieceChosen &&
-						isMouseListenerEnabled && areMouseListenersEnabled)
-					{
-						label.setBackground(null);	
+				public void mouseExited(MouseEvent e) {
+					if (!StateManager.isPieceChosen &&
+							isMouseListenerEnabled &&
+							areMouseListenersEnabled) {
+						label.setBackground(null);
 					}
 				}
-				
+
 				@Override
-				public void mouseEntered(MouseEvent e) 
-				{
-					if(	!StateManager.isPieceChosen &&
-						isMouseListenerEnabled && areMouseListenersEnabled)
-					{
-						label.setBackground(new Color(133, 133, 133));	
-					}					
+				public void mouseEntered(MouseEvent e) {
+					if (!StateManager.isPieceChosen &&
+							isMouseListenerEnabled &&
+							areMouseListenersEnabled) {
+						label.setBackground(new Color(133, 133, 133));
+					}
 				}
-				
+
 				@Override
-				public void mouseClicked(MouseEvent e) 
-				{
-					if(isMouseListenerEnabled && areMouseListenersEnabled)
-					{
+				public void mouseClicked(MouseEvent e) {
+					if (isMouseListenerEnabled && areMouseListenersEnabled) {
 						label.setBackground(new Color(24, 179, 0));
 						isMouseListenerEnabled = false;
-						
+
 						pieceLabelPieceMap.get(label).choose();
 						board.setChosenPiece();
-						
+
 						StateManager.pieceChosen();
 					}
 				}
 			};
-			
+
 			label.addMouseListener(mouseListener);
 			this.pieceLabelMouseListenerMap.put(label, mouseListener);
 		}
