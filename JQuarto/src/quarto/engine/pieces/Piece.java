@@ -23,6 +23,11 @@ public class Piece
 	{
 		return this.pieceType;
 	}
+
+	public int getPieceNumber()
+	{
+		return this.pieceNumber;
+	}
 	
 	public String getPieceNumberAsString()
 	{

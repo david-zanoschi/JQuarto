@@ -10,10 +10,9 @@ import quarto.engine.pieces.Piece.PieceType;
 
 public class Board 
 {
-	// making this an instance variable messes all up
-	public static final List<Piece> ALL_PIECES = createAllPieces();
 	public static final  List<String> PIECES_NUMBERS_STRINGS = getAllPiecesNumbersAsStrings();
-	
+
+	public List<Piece> allPieces;
 	private List<Piece> placedPieces;
 	private	List<Piece> remainingPieces;
 	private List<Tile> gameBoard;
@@ -23,9 +22,10 @@ public class Board
 	
 	Board(Builder builder)
 	{
+		this.gameBoard = computeGameBoard(builder);
+		this.allPieces = computeAllPieces();
 		this.placedPieces = computePlacedPieces();
 		this.remainingPieces = computeRemainingPieces();
-		this.gameBoard = computeGameBoard(builder);
 	}
 	
 	public boolean isFirstPlayer()
@@ -80,6 +80,7 @@ public class Board
 			if(piece != null && piece.isChosen() && !piece.isPlaced())
 			{
 				this.chosenPiece = piece;
+				break;
 			}
 		}
 	}
@@ -128,7 +129,7 @@ public class Board
 	public Board update()
 	{
 		Builder builder = new Builder();
-		
+
 		this.placedPieces = computePlacedPieces();
 		this.remainingPieces = computeRemainingPieces();
 		
@@ -184,7 +185,7 @@ public class Board
 	{
 		List<Piece> placedPieces = this.computePlacedPieces();
 
-		return placedPieces.size() == ALL_PIECES.size() && !this.isGameOver();
+		return placedPieces.size() == this.allPieces.size() && !this.isGameOver();
 	}
 	
 	private List<Tile> computeGameBoard(final Builder builder)
@@ -198,12 +199,29 @@ public class Board
 		
 		return List.of(tiles);
 	}
+
+	private List<Piece> computeAllPieces()
+	{
+		List<Piece> result = createAllPieces();
+
+		for(int i = 0; i < BoardHelper.NUM_TILES; i++)
+		{
+			Tile ithTile = this.gameBoard.get(i);
+
+			if(ithTile.isOccupied())
+			{
+				result.set(ithTile.getPieceOnTile().getPieceNumber(), this.gameBoard.get(i).getPieceOnTile());
+			}
+		}
+
+		return result;
+	}
 	
 	private List<Piece> computePlacedPieces()
 	{
 		List<Piece> placedPieces = new ArrayList<>();
 		
-		for(final Piece piece : ALL_PIECES)
+		for(final Piece piece : this.allPieces)
 		{
 			if(piece.isPlaced())
 			{
@@ -217,19 +235,19 @@ public class Board
 	private List<Piece> computeRemainingPieces()
 	{
 		List<Piece> remainingPieces = new ArrayList<>();
-		
-		for(final Piece piece : ALL_PIECES)
+
+		for(final Piece piece : this.allPieces)
 		{
 			if(!piece.isPlaced())
 			{
 				remainingPieces.add(piece);
 			}
-			else 
+			else
 			{
 				remainingPieces.add(null);
 			}
 		}
-		
+
 		return remainingPieces;
 	}
 	
@@ -250,10 +268,7 @@ public class Board
 
 		public void reset()
 		{
-			for(final Piece piece : ALL_PIECES)
-			{
-				piece.reset();
-			}
+			this.boardConfiguration = new HashMap<>();
 		}
 		
 		public Board build()

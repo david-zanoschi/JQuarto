@@ -17,7 +17,6 @@ public class AiHelper
 		
 		// player
 		stringBuilder.append(board.getCurrentPlayerString());
-		
 		// piece
 		Piece chosenPiece = board.getChosenPiece();
 		// piece type
@@ -25,17 +24,16 @@ public class AiHelper
 		// piece position
 		int piecePosition = chosenPiece.getPosition();
 		stringBuilder.append(piecePosition < 10 ? "0" + piecePosition : piecePosition);
-		
 		// separator
 		stringBuilder.append(",");
-		
-		// game over
 		if (board.isGameOver())
 		{
+			// game over
 			stringBuilder.append(board.isFirstPlayer() ? "1" : "2");
 		}
 		else if (board.isDraw())
 		{
+			// draw
 			stringBuilder.append("0");
 		}
 		
@@ -141,7 +139,7 @@ public class AiHelper
 		}
 	}
 	
-	// modifier spune daca punctele sa fie cu plus sau cu minus
+	// modifier indicates whether points should be added or subtracted
 	public static int EvaluatePosition(Board board, int modifier) 
 	{
 		int positionScore = 0;
@@ -151,7 +149,7 @@ public class AiHelper
 			positionScore += 500;
 		}
 		
-		// gaseste criterii de evaluare a tablei de joc
+		// criteria for position evaluation
 		
 		return positionScore;
 	}

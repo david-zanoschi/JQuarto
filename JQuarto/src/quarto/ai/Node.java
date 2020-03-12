@@ -12,6 +12,6 @@ public class Node<T>
 	public Node(T dataParam)
 	{
 		data = dataParam;
-		children = new ArrayList<Node<T>>();
+		children = new ArrayList<>();
 	}
 }

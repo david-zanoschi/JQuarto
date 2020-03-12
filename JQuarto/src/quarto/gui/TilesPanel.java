@@ -116,29 +116,39 @@ public class TilesPanel extends JPanel
 				}
 
 				@Override
-				public void mouseExited(MouseEvent e) {
+				public void mouseExited(MouseEvent e)
+				{
 					if (!StateManager.isPiecePlaced &&
-							isMouseListenerEnabled && areMouseListenersEnabled) {
+						isMouseListenerEnabled &&
+						areMouseListenersEnabled)
+					{
 						label.setIcon(GuiHelper.TILE_ICON);
 					}
 				}
 
 				@Override
-				public void mouseEntered(MouseEvent e) {
+				public void mouseEntered(MouseEvent e)
+				{
 					if (!StateManager.isPiecePlaced &&
-							isMouseListenerEnabled && areMouseListenersEnabled) {
+						isMouseListenerEnabled &&
+						areMouseListenersEnabled)
+					{
 						label.setIcon(GuiHelper.ALTERNATE_TILE_ICON);
 					}
 				}
 
 				@Override
-				public void mouseClicked(MouseEvent e) {
+				public void mouseClicked(MouseEvent e)
+				{
 					if (!tileLabelTileMap.get(label).isOccupied() &&
-							isMouseListenerEnabled && areMouseListenersEnabled) {
+						isMouseListenerEnabled &&
+						areMouseListenersEnabled)
+					{
 						Piece chosenPiece = board.getChosenPiece();
 						chosenPiece.place(tileLabelTileMap.get(label).getCoordinate());
 
 						board = board.update();
+						setBoard(board);
 
 						label.setIcon(GuiHelper.PIECE_SLOTS_ICONS.get(chosenPiece.getPieceNumberAsString() + "Slot"));
 

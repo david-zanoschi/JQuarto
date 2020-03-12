@@ -39,13 +39,13 @@ public class GuiHelper
 		{
 			e.printStackTrace();
 		}
-		
-		Image tileImage = tileBufferedImage.getScaledInstance(	TilesPanel.TILE_SIZE, 
+
+		assert tileBufferedImage != null;
+		Image tileImage = tileBufferedImage.getScaledInstance(	TilesPanel.TILE_SIZE,
 																TilesPanel.TILE_SIZE, 
 																Image.SCALE_SMOOTH);
-		ImageIcon tileImageIcon = new ImageIcon(tileImage);
-		
-		return tileImageIcon;
+
+		return new ImageIcon(tileImage);
 	}
 	
 	private static Map<String, ImageIcon> getPiecesIcons(String input)
@@ -68,19 +68,20 @@ public class GuiHelper
 			
 			Image pieceImage;
 			
-			if(input == "Slot")
+			if(input.equals("Slot"))
 			{
-				pieceImage = pieceBufferedImage.getScaledInstance(	TilesPanel.TILE_SIZE, 
+				assert pieceBufferedImage != null;
+				pieceImage = pieceBufferedImage.getScaledInstance(	TilesPanel.TILE_SIZE,
 																	TilesPanel.TILE_SIZE, 
 																	Image.SCALE_SMOOTH);
 			}
 			else
 			{
-				pieceImage = pieceBufferedImage.getScaledInstance(PiecesPanel.PIECE_SIZE, PiecesPanel.PIECE_SIZE, Image.SCALE_SMOOTH);				
+				assert pieceBufferedImage != null;
+				pieceImage = pieceBufferedImage.getScaledInstance(PiecesPanel.PIECE_SIZE, PiecesPanel.PIECE_SIZE, Image.SCALE_SMOOTH);
 			}
-			
+
 			ImageIcon pieceImageIcon = new ImageIcon(pieceImage);
-			
 			result.put(key, pieceImageIcon);
 		}
 		

@@ -63,7 +63,8 @@ public class PiecesPanel extends JPanel
 		{
 			JLabel pieceLabel = new JLabel();
 
-			if (remainingPiece != null) {
+			if (remainingPiece != null)
+			{
 				pieceLabel.setIcon(GuiHelper.PIECES_ICONS.get(remainingPiece.getPieceNumberAsString()));
 				pieceLabel.setOpaque(true);
 
@@ -79,13 +80,19 @@ public class PiecesPanel extends JPanel
 	
 	public void updatePieces()
 	{
-		for (Entry<JLabel, Piece> entry : pieceLabelPieceMap.entrySet()) {
+		for (Entry<JLabel, Piece> entry : pieceLabelPieceMap.entrySet())
+		{
 			Piece piece = entry.getValue();
+			JLabel pieceLabel = entry.getKey();
 
-			if (!this.board.getRemainingPieces().contains(piece)) {
-				JLabel pieceLabel = entry.getKey();
-				pieceLabel.setIcon(null);
-				pieceLabel.setOpaque(false);
+			for (Piece placedPiece: this.board.getPlacedPieces())
+			{
+				if (placedPiece.getPieceNumber() == piece.getPieceNumber()
+					&& pieceLabel.getIcon() != null)
+				{
+					pieceLabel.setIcon(null);
+					pieceLabel.setOpaque(false);
+				}
 			}
 		}
 	}
@@ -102,7 +109,8 @@ public class PiecesPanel extends JPanel
 	
 	private void addMouseListeners()
 	{
-		for (Entry<JLabel, MouseListener> entry : this.pieceLabelMouseListenerMap.entrySet()) {
+		for (Entry<JLabel, MouseListener> entry : this.pieceLabelMouseListenerMap.entrySet())
+		{
 			JLabel label = entry.getKey();
 
 			MouseListener mouseListener = new MouseListener() {
@@ -117,32 +125,48 @@ public class PiecesPanel extends JPanel
 				}
 
 				@Override
-				public void mouseExited(MouseEvent e) {
+				public void mouseExited(MouseEvent e)
+				{
 					if (!StateManager.isPieceChosen &&
-							isMouseListenerEnabled &&
-							areMouseListenersEnabled) {
+						isMouseListenerEnabled &&
+						areMouseListenersEnabled)
+					{
 						label.setBackground(null);
 					}
 				}
 
 				@Override
-				public void mouseEntered(MouseEvent e) {
+				public void mouseEntered(MouseEvent e)
+				{
 					if (!StateManager.isPieceChosen &&
-							isMouseListenerEnabled &&
-							areMouseListenersEnabled) {
+						isMouseListenerEnabled &&
+						areMouseListenersEnabled)
+					{
 						label.setBackground(new Color(133, 133, 133));
 					}
 				}
 
 				@Override
-				public void mouseClicked(MouseEvent e) {
-					if (isMouseListenerEnabled && areMouseListenersEnabled) {
+				public void mouseClicked(MouseEvent e)
+				{
+					if (isMouseListenerEnabled && areMouseListenersEnabled)
+					{
 						label.setBackground(new Color(24, 179, 0));
 						isMouseListenerEnabled = false;
 
 						pieceLabelPieceMap.get(label).choose();
-						board.setChosenPiece();
+						for(Piece remainingPiece : board.getRemainingPieces())
+						{
+							if(remainingPiece == null)
+								continue;
 
+							if(remainingPiece.getPieceNumber() == pieceLabelPieceMap.get(label).getPieceNumber())
+							{
+								remainingPiece.choose();
+								break;
+							}
+						}
+						board.setChosenPiece();
 						StateManager.pieceChosen();
 					}
 				}
