@@ -54,8 +54,9 @@ public class PiecesPanel extends JPanel
 	{
 		this.board = board;
 	}
-	
-	public void drawPieces()
+
+	// called on board initialization
+	public void draw()
 	{
 		this.removeAll();
 
@@ -75,15 +76,17 @@ public class PiecesPanel extends JPanel
 			this.add(pieceLabel);
 		}
 		
-		addMouseListeners();
+		this.addMouseListeners();
 	}
 	
 	public void updatePieces()
 	{
+		boolean matchFound = false;
+
 		for (Entry<JLabel, Piece> entry : pieceLabelPieceMap.entrySet())
 		{
-			Piece piece = entry.getValue();
 			JLabel pieceLabel = entry.getKey();
+			Piece piece = entry.getValue();
 
 			for (Piece placedPiece: this.board.getPlacedPieces())
 			{
@@ -92,7 +95,15 @@ public class PiecesPanel extends JPanel
 				{
 					pieceLabel.setIcon(null);
 					pieceLabel.setOpaque(false);
+
+					matchFound = true;
+					break;
 				}
+			}
+
+			if (matchFound)
+			{
+				break;
 			}
 		}
 	}
@@ -113,9 +124,8 @@ public class PiecesPanel extends JPanel
 		{
 			JLabel label = entry.getKey();
 
-			MouseListener mouseListener = new MouseListener() {
-				boolean isMouseListenerEnabled = true;
-
+			MouseListener mouseListener = new MouseListener()
+			{
 				@Override
 				public void mouseReleased(MouseEvent e) {
 				}
@@ -127,9 +137,7 @@ public class PiecesPanel extends JPanel
 				@Override
 				public void mouseExited(MouseEvent e)
 				{
-					if (!StateManager.isPieceChosen &&
-						isMouseListenerEnabled &&
-						areMouseListenersEnabled)
+					if (!StateManager.isPieceChosen && areMouseListenersEnabled)
 					{
 						label.setBackground(null);
 					}
@@ -138,9 +146,7 @@ public class PiecesPanel extends JPanel
 				@Override
 				public void mouseEntered(MouseEvent e)
 				{
-					if (!StateManager.isPieceChosen &&
-						isMouseListenerEnabled &&
-						areMouseListenersEnabled)
+					if (!StateManager.isPieceChosen && areMouseListenersEnabled)
 					{
 						label.setBackground(new Color(133, 133, 133));
 					}
@@ -149,10 +155,9 @@ public class PiecesPanel extends JPanel
 				@Override
 				public void mouseClicked(MouseEvent e)
 				{
-					if (isMouseListenerEnabled && areMouseListenersEnabled)
+					if (areMouseListenersEnabled)
 					{
 						label.setBackground(new Color(24, 179, 0));
-						isMouseListenerEnabled = false;
 
 						pieceLabelPieceMap.get(label).choose();
 						for(Piece remainingPiece : board.getRemainingPieces())
@@ -168,6 +173,9 @@ public class PiecesPanel extends JPanel
 						}
 						board.setChosenPiece();
 						StateManager.pieceChosen();
+
+						pieceLabelMouseListenerMap.remove(label);
+						((JLabel) e.getSource()).removeMouseListener(this);
 					}
 				}
 			};

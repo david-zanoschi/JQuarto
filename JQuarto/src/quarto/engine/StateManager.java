@@ -53,21 +53,19 @@ public class StateManager
 		piecesPanel = new PiecesPanel(board);
 		tilesPanel = new TilesPanel(board);
 		
-		gameWindow = new GameWindow(board, infoPanel, piecesPanel, tilesPanel);
+		gameWindow = new GameWindow(infoPanel, piecesPanel, tilesPanel);
 	}
 	
 	public static void run()
 	{
 		infoPanel.setInfo(GuiHelper.CHOOSE_PIECE);
 		
-		piecesPanel.drawPieces();
+		piecesPanel.draw();
 		piecesPanel.enableMouseListeners();
 		
-		tilesPanel.drawTiles();
+		tilesPanel.draw();
 		tilesPanel.disableMouseListeners();
-		
-		gameWindow.addKeyListener();
-		gameWindow.setFramePosition();
+
 		gameWindow.draw();
 	}
 	
@@ -131,8 +129,7 @@ public class StateManager
 	
 	public static void restart()
 	{
-		System.out.print(
-				tilesPanel.getBoard().isGameOver() || tilesPanel.getBoard().isDraw() ? "\n" : "X\n");
+		System.out.print(tilesPanel.getBoard().isGameOver() || tilesPanel.getBoard().isDraw() ? "\n" : "X\n");
 		
 		isPieceChosen = false;
 		isPiecePlaced = false;

@@ -17,17 +17,15 @@ public class GameWindow
 	
 	private JFrame gameWindow;
 	
-	public GameWindow(	Board board,
-						InfoPanel infoPanel,
+	public GameWindow(	InfoPanel infoPanel,
 						PiecesPanel piecesPanel,
 						TilesPanel tilesPanel) 
 	{
 		this.gameWindow = new JFrame("JQuarto");
-		this.configure(board, infoPanel, piecesPanel, tilesPanel);
+		this.configure(infoPanel, piecesPanel, tilesPanel);
 	}
 	
-	public void configure(	Board board, 
-							InfoPanel infoPanel, 
+	public void configure(	InfoPanel infoPanel,
 							PiecesPanel piecesPanel, 
 							TilesPanel tilesPanel)
 	{
@@ -36,47 +34,20 @@ public class GameWindow
 		this.gameWindow.add(piecesPanel, BorderLayout.SOUTH);
 		
 		this.gameWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		this.gameWindow.setResizable(false);
-		gameWindow.validate();
-		this.setFramePosition();
+		this.addKeyListener();
 	}
-	
-	// call this method only after inserting all panels and labels in the main window
-	public void setFramePosition()
-	{
-		this.gameWindow.pack();
-		Dimension screenDimension = Toolkit.getDefaultToolkit().getScreenSize();
-		this.gameWindow.setLocation(screenDimension.width / 2 - this.gameWindow.getWidth(),
-									screenDimension.height / 2 - this.gameWindow.getHeight());
-	}
-	
-	@SuppressWarnings("exports")
-	public void add(JPanel jPanel, String borderLayoutString)
-	{
-		this.gameWindow.add(jPanel, borderLayoutString);
-	}
-	
+
 	public void draw()
 	{
-		this.gameWindow.setLocationRelativeTo(null);
-		this.gameWindow.pack();
+		this.gameWindow.pack(); // sets the size for the JFrame so that all the child components are of preferred size or above
+		this.gameWindow.setLocationRelativeTo(null); // for null, it centers the JFrame
+		this.gameWindow.setResizable(false);
 		this.gameWindow.setVisible(true);
-	}
-	
-	public void clear()
-	{
-		this.gameWindow.removeAll();
 	}
 	
 	public void close() 
 	{
 		this.gameWindow.dispose();
-	}
-	
-	public void validate()
-	{
-		this.gameWindow.validate();
-		this.gameWindow.repaint();
 	}
 	
 	public void addKeyListener()
@@ -104,7 +75,6 @@ public class GameWindow
 				
 				if(e.getKeyChar() == KeyEvent.VK_ESCAPE)
 				{
-					gameWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 					gameWindow.dispatchEvent(new WindowEvent(gameWindow, WindowEvent.WINDOW_CLOSING));
 				}
 			}
