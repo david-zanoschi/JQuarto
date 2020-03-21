@@ -2,6 +2,7 @@ package quarto.engine;
 
 import java.util.Set;
 
+import quarto.ai.AiPlayer;
 import quarto.engine.board.Board;
 import quarto.engine.board.Board.Builder;
 import quarto.gui.GameWindow;
@@ -21,6 +22,7 @@ public class StateManager
 	
 	public static boolean isPieceChosen = false;
 	public static boolean isPiecePlaced = false;
+	public static boolean isAiOpponentSelected;
 	
 	public StateManager() 
 	{		
@@ -54,6 +56,7 @@ public class StateManager
 		tilesPanel = new TilesPanel(board);
 		
 		gameWindow = new GameWindow(infoPanel, piecesPanel, tilesPanel);
+		isAiOpponentSelected = gameWindow.isAiOpponentSelected();
 	}
 	
 	public static void run()
@@ -70,42 +73,39 @@ public class StateManager
 	}
 	
 	public static void pieceChosen()
-	{		
+	{
+		board.nextPlayer();
+
 		isPieceChosen = true;
 		isPiecePlaced = false;
 		
 		infoPanel.setInfo(GuiHelper.PLACE_PIECE);
-		
 		piecesPanel.disableMouseListeners();
-		
-		tilesPanel.updateTiles();
 		tilesPanel.enableMouseListeners();
-		
-		// create transposition tree using a copy of the board
-//		Builder builder = new Builder();
-//		for(Tile tile : tilesPanel.getBoard().getGameBoard())
-//		{
-//			builder.setPiece(tile.getPieceOnTile());
-//		}
-//		AiHelper.createTranspositionTree(builder.build());
+
+		if(!tilesPanel.getBoard().isFirstPlayer() && gameWindow.isAiOpponentSelected())
+		{
+			AiPlayer.PlaceWinningOrRandomPiece(piecesPanel.getBoard());
+		}
 	}
 	
-	public static void piecePlaced()
-	{		
+	public static void piecePlaced(Board boardParam)
+	{
 		isPieceChosen = false;
 		isPiecePlaced = true;
 		
 		infoPanel.setInfo(GuiHelper.CHOOSE_PIECE);
-		
-		tilesPanel.updateTiles();
+
+		if(boardParam != null)
+		{
+			tilesPanel.setBoard(boardParam);
+		}
+		tilesPanel.update();
 		tilesPanel.disableMouseListeners();
 		
 		piecesPanel.setBoard(tilesPanel.getBoard());
 		piecesPanel.updatePieces();
 		piecesPanel.enableMouseListeners();
-		
-		// ai
-		// System.out.print(AiHelper.getLastMove(tilesPanel.getBoard()));
 		
 		if(tilesPanel.getBoard().isGameOver())
 		{
@@ -121,12 +121,18 @@ public class StateManager
 			
 			infoPanel.setInfo(GuiHelper.DRAW);
 		}
-		else
-		{			
-			tilesPanel.getBoard().nextPlayer();
+		else if (!tilesPanel.getBoard().isFirstPlayer() && gameWindow.isAiOpponentSelected())
+		{
+			AiPlayer.chooseNotWinningPiece(piecesPanel);
 		}
 	}
-	
+
+	// To simulate optional board parameter
+	public static void piecePlaced()
+	{
+		piecePlaced(null);
+	}
+
 	public static void restart()
 	{
 		System.out.print(tilesPanel.getBoard().isGameOver() || tilesPanel.getBoard().isDraw() ? "\n" : "X\n");
@@ -139,8 +145,8 @@ public class StateManager
 		configure();
 		run();
 	}
-	
-	
+
+
 	// Threads
 	public static Set<Thread> threadSet;
 	

@@ -1,25 +1,23 @@
 package quarto.gui;
 
 import java.awt.*;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.event.WindowEvent;
+import java.awt.event.*;
 
 import javax.swing.*;
 
 import quarto.engine.StateManager;
-import quarto.engine.board.Board;
- 
+
 
 public class GameWindow 
 {
 	public static final int WINDOW_WIDTH = 560;
-	
+
+	private JMenuBar menuBar;
 	private JFrame gameWindow;
 	
 	public GameWindow(	InfoPanel infoPanel,
 						PiecesPanel piecesPanel,
-						TilesPanel tilesPanel) 
+						TilesPanel tilesPanel)
 	{
 		this.gameWindow = new JFrame("JQuarto");
 		this.configure(infoPanel, piecesPanel, tilesPanel);
@@ -29,6 +27,8 @@ public class GameWindow
 							PiecesPanel piecesPanel, 
 							TilesPanel tilesPanel)
 	{
+		this.menuBar = configureMenuBar();
+		this.gameWindow.setJMenuBar(menuBar);
 		this.gameWindow.add(tilesPanel, BorderLayout.NORTH);
 		this.gameWindow.add(infoPanel, BorderLayout.CENTER);
 		this.gameWindow.add(piecesPanel, BorderLayout.SOUTH);
@@ -48,6 +48,43 @@ public class GameWindow
 	public void close() 
 	{
 		this.gameWindow.dispose();
+	}
+
+	public JMenuBar configureMenuBar()
+	{
+		// Menu bar
+		JMenuBar jMenuBar = new JMenuBar();
+		// Tab
+		JMenu opponentMenu = new JMenu("Choose opponent");
+		jMenuBar.add(opponentMenu);
+		// radio buttons group
+		ButtonGroup buttonGroup = new ButtonGroup();
+		// human opponent
+		JRadioButtonMenuItem humanPlayerRadioButton = new JRadioButtonMenuItem("Human Player");
+		humanPlayerRadioButton.addActionListener(e -> StateManager.isAiOpponentSelected = isAiOpponentSelected());
+		buttonGroup.add(humanPlayerRadioButton);
+		opponentMenu.add(humanPlayerRadioButton);
+		// ai opponent
+		JRadioButtonMenuItem aiPlayerRadioButton = new JRadioButtonMenuItem("AI Player");
+		aiPlayerRadioButton.addActionListener(e -> StateManager.isAiOpponentSelected = isAiOpponentSelected());
+		buttonGroup.add(aiPlayerRadioButton);
+		opponentMenu.add(aiPlayerRadioButton);
+		// persist opponent over game instances
+		if (!StateManager.isAiOpponentSelected)
+		{
+			humanPlayerRadioButton.setSelected(true);
+		}
+		else
+		{
+			aiPlayerRadioButton.setSelected(true);
+		}
+
+		return jMenuBar;
+	}
+
+	public boolean isAiOpponentSelected()
+	{
+		return !this.menuBar.getMenu(0).getItem(0).isSelected();
 	}
 	
 	public void addKeyListener()

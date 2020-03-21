@@ -11,7 +11,6 @@ import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 
 import quarto.engine.board.Board;
-import quarto.engine.pieces.Piece;
 
 public class GuiHelper 
 {
@@ -50,7 +49,7 @@ public class GuiHelper
 	
 	private static Map<String, ImageIcon> getPiecesIcons(String input)
 	{
-		Map<String, ImageIcon> result = new HashMap<String, ImageIcon>();
+		Map<String, ImageIcon> result = new HashMap<>();
 		
 		for(String pieceNumber : Board.PIECES_NUMBERS_STRINGS)
 		{

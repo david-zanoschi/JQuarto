@@ -151,25 +151,20 @@ public class Board
 			{
 				Piece pieceOnTile = this.getTile(coordinate).getPieceOnTile();
 
-				if(pieceOnTile != null)
+				if(pieceOnTile == null)
 				{ 
-					piecesOnLine.add(pieceOnTile);
-				}
-				else
-				{
 					break;
 				}
+
+				piecesOnLine.add(pieceOnTile);
 
 				if(piecesOnLine.size() == BoardHelper.NUM_TILES_PER_LINE)
 				{
 					for(int i = 0; i < 4; i++)
 					{
-						if(	piecesOnLine.get(0).getType().toString().charAt(i) ==
-							piecesOnLine.get(1).getType().toString().charAt(i) &&
-							piecesOnLine.get(0).getType().toString().charAt(i) ==
-							piecesOnLine.get(2).getType().toString().charAt(i) &&
-							piecesOnLine.get(0).getType().toString().charAt(i) ==
-							piecesOnLine.get(3).getType().toString().charAt(i))
+						if(	piecesOnLine.get(0).getType().toString().charAt(i) == piecesOnLine.get(1).getType().toString().charAt(i) &&
+							piecesOnLine.get(0).getType().toString().charAt(i) == piecesOnLine.get(2).getType().toString().charAt(i) &&
+							piecesOnLine.get(0).getType().toString().charAt(i) == piecesOnLine.get(3).getType().toString().charAt(i))
 						{
 							return true;
 						}
@@ -250,6 +245,21 @@ public class Board
 
 		return remainingPieces;
 	}
+
+	public List<Integer> computeEmptyTilesCoordinates()
+	{
+		List<Integer> emptyTilesCoordinates = new ArrayList<>();
+
+		for(Tile tile : this.gameBoard)
+		{
+			if(tile instanceof Tile.EmptyTile)
+			{
+				emptyTilesCoordinates.add(tile.getCoordinate());
+			}
+		}
+
+		return emptyTilesCoordinates;
+	}
 	
 	public static class Builder
 	{
@@ -263,6 +273,12 @@ public class Board
 		public Builder setPiece(final Piece piece)
 		{
 			this.boardConfiguration.put(piece.getPosition(), piece);
+			return this;
+		}
+
+		public Builder removePiece(int key)
+		{
+			this.boardConfiguration.remove(key);
 			return this;
 		}
 

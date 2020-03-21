@@ -90,8 +90,7 @@ public class PiecesPanel extends JPanel
 
 			for (Piece placedPiece: this.board.getPlacedPieces())
 			{
-				if (placedPiece.getPieceNumber() == piece.getPieceNumber()
-					&& pieceLabel.getIcon() != null)
+				if (placedPiece.getPieceNumber() == piece.getPieceNumber() && pieceLabel.getIcon() != null)
 				{
 					pieceLabel.setIcon(null);
 					pieceLabel.setOpaque(false);
@@ -182,6 +181,49 @@ public class PiecesPanel extends JPanel
 
 			label.addMouseListener(mouseListener);
 			this.pieceLabelMouseListenerMap.put(label, mouseListener);
+		}
+	}
+
+	public void aiChosePiece(Piece piece)
+	{
+		for (Entry<JLabel, Piece> entry : this.pieceLabelPieceMap.entrySet())
+		{
+			JLabel entryLabel = entry.getKey();
+			Piece entryPiece = entry.getValue();
+
+			if (entryPiece.getPieceNumber() == piece.getPieceNumber())
+			{
+				entryLabel.setBackground(new Color(252, 3, 3));
+
+				for (Entry<JLabel, MouseListener> labelMouse : this.pieceLabelMouseListenerMap.entrySet())
+				{
+					JLabel label = labelMouse.getKey();
+					MouseListener mouseListener = labelMouse.getValue();
+
+					if (label == entryLabel)
+					{
+						pieceLabelMouseListenerMap.remove(label);
+						label.removeMouseListener(mouseListener);
+						break;
+					}
+				}
+			}
+		}
+
+		for (Piece remainingPiece : this.board.getRemainingPieces())
+		{
+			if (remainingPiece == null)
+			{
+				continue;
+			}
+
+			if (remainingPiece.getPieceNumber() == piece.getPieceNumber())
+			{
+				remainingPiece.choose();
+				board.setChosenPiece();
+				StateManager.pieceChosen();
+				break;
+			}
 		}
 	}
 }

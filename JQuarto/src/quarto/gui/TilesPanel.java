@@ -76,18 +76,25 @@ public class TilesPanel extends JPanel
 		
 		this.addMouseListeners();
 	}
-	
-	public void updateTiles()
-	{
-		for (Entry<JLabel, Tile> entry : tileLabelTileMap.entrySet())
-		{
-			Tile tile = entry.getValue();
 
-			if (tile.isOccupied()) {
-				Piece pieceOnTile = tile.getPieceOnTile();
-				JLabel tileLabel = entry.getKey();
-				tileLabel.setIcon(GuiHelper.PIECE_SLOTS_ICONS.get(pieceOnTile.getPieceNumberAsString() + "Slot"));
-				break;
+	public void update()
+	{
+		for (Piece placedPiece : this.board.getPlacedPieces())
+		{
+			for (Entry<JLabel, Tile> entry : this.tileLabelTileMap.entrySet())
+			{
+				if (placedPiece.getPosition() == entry.getValue().getCoordinate())
+				{
+					entry.getKey().setIcon(GuiHelper.PIECE_SLOTS_ICONS.get(placedPiece.getPieceNumberAsString() + "Slot"));
+
+					for (Entry<JLabel, MouseListener> labelMouse : this.tileLabelMouseListenerMap.entrySet())
+					{
+						if(labelMouse.getKey() == entry.getKey())
+						{
+							labelMouse.getKey().removeMouseListener(labelMouse.getValue());
+						}
+					}
+				}
 			}
 		}
 	}
@@ -180,6 +187,7 @@ public class TilesPanel extends JPanel
 					robot.mouseMove(originPoint.x + 1, originPoint.y + 1);
 					robot.mousePress(InputEvent.BUTTON1_DOWN_MASK);
 					robot.mouseRelease(InputEvent.BUTTON1_DOWN_MASK);
+					break;
 				}
 				catch (AWTException e) 
 				{

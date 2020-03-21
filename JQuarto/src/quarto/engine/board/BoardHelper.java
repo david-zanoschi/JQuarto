@@ -7,7 +7,6 @@ public class BoardHelper
 {
 	public static final int NUM_TILES_PER_LINE = 4;
 	public static final int NUM_TILES = NUM_TILES_PER_LINE * NUM_TILES_PER_LINE;
-	public static final int NUM_PIECES = 16;
 	public static final List<Integer[]> BOARD_LINES = computeBoardLines();
 	
 	private static Integer[] computeRow(final int rowNumber)
@@ -52,7 +51,7 @@ public class BoardHelper
 	
 	private static List<Integer[]> computeBoardLines()
 	{
-		List<Integer[]> lines = new ArrayList<Integer[]>();
+		List<Integer[]> lines = new ArrayList<>();
 		
 		for(int i = 0; i < NUM_TILES_PER_LINE; i++)
 		{
