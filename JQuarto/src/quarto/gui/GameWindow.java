@@ -4,7 +4,6 @@ import java.awt.*;
 import java.awt.event.*;
 
 import javax.swing.*;
-
 import quarto.engine.StateManager;
 
 
@@ -54,29 +53,103 @@ public class GameWindow
 	{
 		// Menu bar
 		JMenuBar jMenuBar = new JMenuBar();
-		// Tab
+
+		// Opponent tab
 		JMenu opponentMenu = new JMenu("Choose opponent");
 		jMenuBar.add(opponentMenu);
-		// radio buttons group
-		ButtonGroup buttonGroup = new ButtonGroup();
+		// Mover tab
+		JMenu moverMenu = new JMenu("Who moves first");
+		jMenuBar.add(moverMenu);
+
+		ButtonGroup opponentButtonGroup = new ButtonGroup();
 		// human opponent
-		JRadioButtonMenuItem humanPlayerRadioButton = new JRadioButtonMenuItem("Human Player");
-		humanPlayerRadioButton.addActionListener(e -> StateManager.isAiOpponentSelected = isAiOpponentSelected());
-		buttonGroup.add(humanPlayerRadioButton);
-		opponentMenu.add(humanPlayerRadioButton);
+		JRadioButtonMenuItem humanOpponentRadioButton = new JRadioButtonMenuItem("Human Player");
+		humanOpponentRadioButton.addActionListener(e -> {
+			if (StateManager.isAiOpponentSelected)
+			{
+				jMenuBar.getMenu(1).setEnabled(false);
+				StateManager.isAiOpponentSelected = isAiOpponentSelected();
+
+				if (StateManager.moveCounter > 1)
+				{
+					StateManager.restart();
+				}
+			}
+		});
+		opponentButtonGroup.add(humanOpponentRadioButton);
+		opponentMenu.add(humanOpponentRadioButton);
 		// ai opponent
-		JRadioButtonMenuItem aiPlayerRadioButton = new JRadioButtonMenuItem("AI Player");
-		aiPlayerRadioButton.addActionListener(e -> StateManager.isAiOpponentSelected = isAiOpponentSelected());
-		buttonGroup.add(aiPlayerRadioButton);
-		opponentMenu.add(aiPlayerRadioButton);
+		JRadioButtonMenuItem aiOpponentRadioButton = new JRadioButtonMenuItem("AI Player");
+		aiOpponentRadioButton.addActionListener(e -> {
+			if (!StateManager.isAiOpponentSelected)
+			{
+				jMenuBar.getMenu(1).setEnabled(true);
+				StateManager.isAiOpponentSelected = isAiOpponentSelected();
+
+				if (StateManager.moveCounter > 1)
+				{
+					StateManager.restart();
+				}
+			}
+		});
+		opponentButtonGroup.add(aiOpponentRadioButton);
+		opponentMenu.add(aiOpponentRadioButton);
 		// persist opponent over game instances
 		if (!StateManager.isAiOpponentSelected)
 		{
-			humanPlayerRadioButton.setSelected(true);
+			// human player selected
+			jMenuBar.getMenu(0).getItem(0).setSelected(true);
+			// disable who moves first menu
+			jMenuBar.getMenu(1).setEnabled(false);
 		}
 		else
 		{
-			aiPlayerRadioButton.setSelected(true);
+			// ai player selected
+			jMenuBar.getMenu(0).getItem(1).setSelected(true);
+			// enable who moves first menu
+			jMenuBar.getMenu(1).setEnabled(true);
+		}
+
+		ButtonGroup moverButtonGroup = new ButtonGroup();
+		// human mover
+		JRadioButtonMenuItem humanMoverRadioButton = new JRadioButtonMenuItem("Human Player");
+		humanMoverRadioButton.addActionListener(e -> {
+			if (StateManager.isAiMovingFirst)
+			{
+				StateManager.isAiMovingFirst = isAiMovingFirst();
+				StateManager.restart();
+			}
+		});
+		moverButtonGroup.add(humanMoverRadioButton);
+		moverMenu.add(humanMoverRadioButton);
+		// ai mover
+		JRadioButtonMenuItem aiMoverRadioButton = new JRadioButtonMenuItem("Ai Player");
+		aiMoverRadioButton.addActionListener(e -> {
+			if(!StateManager.isAiMovingFirst)
+			{
+				StateManager.isAiMovingFirst = isAiMovingFirst();
+				if (StateManager.moveCounter == 1)
+				{
+					StateManager.decideWhatAiDoes();
+				}
+				else
+				{
+					StateManager.restart();
+				}
+			}
+		});
+		moverButtonGroup.add(aiMoverRadioButton);
+		moverMenu.add(aiMoverRadioButton);
+		// persis mover over game instances
+		if (!StateManager.isAiMovingFirst)
+		{
+			// human player moves
+			jMenuBar.getMenu(1).getItem(0).setSelected(true);
+		}
+		else
+		{
+			// ai player moves
+			jMenuBar.getMenu(1).getItem(1).setSelected(true);
 		}
 
 		return jMenuBar;
@@ -85,6 +158,11 @@ public class GameWindow
 	public boolean isAiOpponentSelected()
 	{
 		return !this.menuBar.getMenu(0).getItem(0).isSelected();
+	}
+
+	public boolean isAiMovingFirst()
+	{
+		return !this.menuBar.getMenu(1).getItem(0).isSelected();
 	}
 	
 	public void addKeyListener()

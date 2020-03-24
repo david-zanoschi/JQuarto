@@ -5,12 +5,22 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
 
+import quarto.engine.StateManager;
 import quarto.engine.board.Board;
 import quarto.engine.board.Tile;
 import quarto.engine.pieces.Piece;
+import quarto.gui.GameWindow;
 
 public class AiHelper 
-{	
+{
+	public static boolean aiShouldMove(GameWindow gameWindow)
+	{
+		// returns true if opponent is ai and ai moves first and it's odd move or ai moves second and it's even move
+		return 	gameWindow.isAiOpponentSelected() &&
+				((StateManager.isAiMovingFirst && StateManager.moveCounter % 2 == 1) ||
+				(!StateManager.isAiMovingFirst && StateManager.moveCounter % 2 == 0));
+	}
+
 	public static String getLastMove(Board board) 
 	{
 		StringBuilder stringBuilder = new StringBuilder();

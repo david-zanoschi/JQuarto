@@ -24,6 +24,7 @@ public class AiPlayer
 
         Piece chosenPiece = board.getChosenPiece();
         List<Integer> emptyTilesCoordinates = board.computeEmptyTilesCoordinates();
+        List<Integer> noNoCoordinates = new ArrayList<>();
 
         for(Integer coordinate : emptyTilesCoordinates)
         {
@@ -36,17 +37,38 @@ public class AiPlayer
                 StateManager.piecePlaced(newBoard);
                 return;
             }
-            else
+            // if after making the placement, whichever piece is handed is a winning piece, don't place the piece there
+            else if (isWinningPosition(newBoard))
             {
-                chosenPiece.resetPosition();
-                builder = builder.removePiece(coordinate);
+                noNoCoordinates.add(coordinate);
             }
+
+            chosenPiece.resetPosition();
+            builder = builder.removePiece(coordinate);
         }
 
         Random random = new Random();
-        chosenPiece.place(emptyTilesCoordinates.get(random.nextInt(emptyTilesCoordinates.size())));
-        Board newBoard = builder.setPiece(chosenPiece).build();
-        StateManager.piecePlaced(newBoard);
+        int randomCoordinate = emptyTilesCoordinates.get(random.nextInt(emptyTilesCoordinates.size()));
+
+        // if no matter the placement the match is lost, place the piece randomly
+        if (noNoCoordinates.size() == emptyTilesCoordinates.size())
+        {
+            chosenPiece.place(randomCoordinate);
+            Board newBoard = builder.setPiece(chosenPiece).build();
+            StateManager.piecePlaced(newBoard);
+        }
+        // else place the piece randomly, but on a position that will not make the opponent win
+        else
+        {
+            while (isNoNoCoordinate(noNoCoordinates, randomCoordinate))
+            {
+                randomCoordinate = emptyTilesCoordinates.get(random.nextInt(emptyTilesCoordinates.size()));
+            }
+
+            chosenPiece.place(randomCoordinate);
+            Board newBoard = builder.setPiece(chosenPiece).build();
+            StateManager.piecePlaced(newBoard);
+        }
     }
 
     // choose a piece so the opponent does not win
@@ -81,16 +103,12 @@ public class AiPlayer
                 remainingPiece.place(coordinate);
                 Board newBoard = builder.setPiece(remainingPiece).build();
 
-                if (newBoard.isGameOver())
-                {
-                    winningPlacement = true;
-                }
-
                 remainingPiece.resetPosition();
                 builder = builder.removePiece(coordinate);
 
-                if (winningPlacement)
+                if (newBoard.isGameOver())
                 {
+                    winningPlacement = true;
                     break;
                 }
             }
@@ -114,5 +132,62 @@ public class AiPlayer
            winningPiece = remainingPieces.get(random.nextInt(remainingPieces.size()));
         } while (winningPiece == null);
         piecesPanel.aiChosePiece(winningPiece);
+    }
+
+    private static boolean isNoNoCoordinate(List<Integer> noNoCoordinates, int randomCoordinate)
+    {
+        for(Integer noNoCoordinate : noNoCoordinates)
+        {
+            if (randomCoordinate == noNoCoordinate)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private static boolean isWinningPosition(Board board)
+    {
+        List<Piece> placedPieces = board.getPlacedPieces();
+        Board.Builder builder = new Board.Builder();
+        // current builder
+        for (Piece placedPiece : placedPieces)
+        {
+            builder.setPiece(placedPiece);
+        }
+
+        boolean isWinningPosition = true;
+        List<Piece> remainingPieces = board.getRemainingPieces();
+        List<Integer> emptyTileCoordinates = board.computeEmptyTilesCoordinates();
+        for (Piece remainingPiece : remainingPieces)
+        {
+            if (remainingPiece == null)
+            {
+                continue;
+            }
+
+            for (Integer coordinate : emptyTileCoordinates)
+            {
+                remainingPiece.place(coordinate);
+                Board newBoard = builder.setPiece(remainingPiece).build();
+
+                remainingPiece.resetPosition();
+                builder = builder.removePiece(coordinate);
+
+                if (!newBoard.isGameOver())
+                {
+                    isWinningPosition = false;
+                    break;
+                }
+            }
+
+            if (!isWinningPosition)
+            {
+                break;
+            }
+        }
+
+        return isWinningPosition;
     }
 }

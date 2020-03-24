@@ -2,6 +2,7 @@ package quarto.engine;
 
 import java.util.Set;
 
+import quarto.ai.AiHelper;
 import quarto.ai.AiPlayer;
 import quarto.engine.board.Board;
 import quarto.engine.board.Board.Builder;
@@ -23,6 +24,9 @@ public class StateManager
 	public static boolean isPieceChosen = false;
 	public static boolean isPiecePlaced = false;
 	public static boolean isAiOpponentSelected;
+	// he who moves first hands the first piece; the second move is placing it a choosing another piece for the opponent
+	public static boolean isAiMovingFirst;
+	public static int moveCounter = 1;
 	
 	public StateManager() 
 	{		
@@ -57,6 +61,7 @@ public class StateManager
 		
 		gameWindow = new GameWindow(infoPanel, piecesPanel, tilesPanel);
 		isAiOpponentSelected = gameWindow.isAiOpponentSelected();
+		isAiMovingFirst = gameWindow.isAiMovingFirst();
 	}
 	
 	public static void run()
@@ -70,10 +75,17 @@ public class StateManager
 		tilesPanel.disableMouseListeners();
 
 		gameWindow.draw();
+
+		if (AiHelper.aiShouldMove(gameWindow))
+		{
+			AiPlayer.chooseNotWinningPiece(piecesPanel);
+		}
 	}
 	
 	public static void pieceChosen()
 	{
+		moveCounter++;
+
 		board.nextPlayer();
 
 		isPieceChosen = true;
@@ -83,7 +95,7 @@ public class StateManager
 		piecesPanel.disableMouseListeners();
 		tilesPanel.enableMouseListeners();
 
-		if(!tilesPanel.getBoard().isFirstPlayer() && gameWindow.isAiOpponentSelected())
+		if(AiHelper.aiShouldMove(gameWindow))
 		{
 			AiPlayer.PlaceWinningOrRandomPiece(piecesPanel.getBoard());
 		}
@@ -121,7 +133,7 @@ public class StateManager
 			
 			infoPanel.setInfo(GuiHelper.DRAW);
 		}
-		else if (!tilesPanel.getBoard().isFirstPlayer() && gameWindow.isAiOpponentSelected())
+		else if (AiHelper.aiShouldMove(gameWindow))
 		{
 			AiPlayer.chooseNotWinningPiece(piecesPanel);
 		}
@@ -140,10 +152,23 @@ public class StateManager
 		isPieceChosen = false;
 		isPiecePlaced = false;
 		board = null;
+		moveCounter = 1;
 		
 		initializeBoard();
 		configure();
 		run();
+	}
+
+	public static void decideWhatAiDoes()
+	{
+		if (AiHelper.aiShouldMove(gameWindow) && !isPieceChosen)
+		{
+			AiPlayer.chooseNotWinningPiece(piecesPanel);
+		}
+		else if (AiHelper.aiShouldMove(gameWindow) && isPieceChosen && !isPiecePlaced)
+		{
+			AiPlayer.PlaceWinningOrRandomPiece(piecesPanel.getBoard());
+		}
 	}
 
 
