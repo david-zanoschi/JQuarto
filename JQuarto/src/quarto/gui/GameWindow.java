@@ -14,20 +14,23 @@ public class GameWindow
 	private JMenuBar menuBar;
 	private JFrame gameWindow;
 	
-	public GameWindow(	InfoPanel infoPanel,
-						PiecesPanel piecesPanel,
-						TilesPanel tilesPanel)
+	public GameWindow(	InfoPanel infoPanel, PiecesPanel piecesPanel, TilesPanel tilesPanel)
 	{
 		this.gameWindow = new JFrame("JQuarto");
 		this.configure(infoPanel, piecesPanel, tilesPanel);
 	}
+
+	public JFrame getGameWindow()
+	{
+		return this.gameWindow;
+	}
 	
-	public void configure(	InfoPanel infoPanel,
-							PiecesPanel piecesPanel, 
-							TilesPanel tilesPanel)
+	public void configure(	InfoPanel infoPanel, PiecesPanel piecesPanel, TilesPanel tilesPanel)
 	{
 		this.menuBar = configureMenuBar();
 		this.gameWindow.setJMenuBar(menuBar);
+		persistOpponent();
+		persistMover();
 		this.gameWindow.add(tilesPanel, BorderLayout.NORTH);
 		this.gameWindow.add(infoPanel, BorderLayout.CENTER);
 		this.gameWindow.add(piecesPanel, BorderLayout.SOUTH);
@@ -54,103 +57,11 @@ public class GameWindow
 		// Menu bar
 		JMenuBar jMenuBar = new JMenuBar();
 
-		// Opponent tab
-		JMenu opponentMenu = new JMenu("Choose opponent");
+		JMenu opponentMenu = GuiHelper.configureMenu("Choose opponent", new ButtonGroup(), GuiHelper.createOpponentButton(this, "Human Player"), GuiHelper.createOpponentButton(this, "AI Player"));
 		jMenuBar.add(opponentMenu);
-		// Mover tab
-		JMenu moverMenu = new JMenu("Who moves first");
+
+		JMenu moverMenu = GuiHelper.configureMenu( "Who moves first", new ButtonGroup(), GuiHelper.createMoverButton(this, "Human Player"), GuiHelper.createMoverButton(this, "AI Player"));
 		jMenuBar.add(moverMenu);
-
-		ButtonGroup opponentButtonGroup = new ButtonGroup();
-		// human opponent
-		JRadioButtonMenuItem humanOpponentRadioButton = new JRadioButtonMenuItem("Human Player");
-		humanOpponentRadioButton.addActionListener(e -> {
-			if (StateManager.isAiOpponentSelected)
-			{
-				jMenuBar.getMenu(1).setEnabled(false);
-				StateManager.isAiOpponentSelected = isAiOpponentSelected();
-
-				if (StateManager.moveCounter > 1)
-				{
-					StateManager.restart();
-				}
-			}
-		});
-		opponentButtonGroup.add(humanOpponentRadioButton);
-		opponentMenu.add(humanOpponentRadioButton);
-		// ai opponent
-		JRadioButtonMenuItem aiOpponentRadioButton = new JRadioButtonMenuItem("AI Player");
-		aiOpponentRadioButton.addActionListener(e -> {
-			if (!StateManager.isAiOpponentSelected)
-			{
-				jMenuBar.getMenu(1).setEnabled(true);
-				StateManager.isAiOpponentSelected = isAiOpponentSelected();
-
-				if (StateManager.moveCounter > 1)
-				{
-					StateManager.restart();
-				}
-			}
-		});
-		opponentButtonGroup.add(aiOpponentRadioButton);
-		opponentMenu.add(aiOpponentRadioButton);
-		// persist opponent over game instances
-		if (!StateManager.isAiOpponentSelected)
-		{
-			// human player selected
-			jMenuBar.getMenu(0).getItem(0).setSelected(true);
-			// disable who moves first menu
-			jMenuBar.getMenu(1).setEnabled(false);
-		}
-		else
-		{
-			// ai player selected
-			jMenuBar.getMenu(0).getItem(1).setSelected(true);
-			// enable who moves first menu
-			jMenuBar.getMenu(1).setEnabled(true);
-		}
-
-		ButtonGroup moverButtonGroup = new ButtonGroup();
-		// human mover
-		JRadioButtonMenuItem humanMoverRadioButton = new JRadioButtonMenuItem("Human Player");
-		humanMoverRadioButton.addActionListener(e -> {
-			if (StateManager.isAiMovingFirst)
-			{
-				StateManager.isAiMovingFirst = isAiMovingFirst();
-				StateManager.restart();
-			}
-		});
-		moverButtonGroup.add(humanMoverRadioButton);
-		moverMenu.add(humanMoverRadioButton);
-		// ai mover
-		JRadioButtonMenuItem aiMoverRadioButton = new JRadioButtonMenuItem("Ai Player");
-		aiMoverRadioButton.addActionListener(e -> {
-			if(!StateManager.isAiMovingFirst)
-			{
-				StateManager.isAiMovingFirst = isAiMovingFirst();
-				if (StateManager.moveCounter == 1)
-				{
-					StateManager.decideWhatAiDoes();
-				}
-				else
-				{
-					StateManager.restart();
-				}
-			}
-		});
-		moverButtonGroup.add(aiMoverRadioButton);
-		moverMenu.add(aiMoverRadioButton);
-		// persis mover over game instances
-		if (!StateManager.isAiMovingFirst)
-		{
-			// human player moves
-			jMenuBar.getMenu(1).getItem(0).setSelected(true);
-		}
-		else
-		{
-			// ai player moves
-			jMenuBar.getMenu(1).getItem(1).setSelected(true);
-		}
 
 		return jMenuBar;
 	}
@@ -164,7 +75,36 @@ public class GameWindow
 	{
 		return !this.menuBar.getMenu(1).getItem(0).isSelected();
 	}
-	
+
+	// persist opponent through game instances
+	// if human opponent, 'who moves first' menu is disabled
+	public void persistOpponent()
+	{
+		if (!StateManager.isAiOpponentSelected)
+		{
+			gameWindow.getJMenuBar().getMenu(0).getItem(0).setSelected(true);
+			gameWindow.getJMenuBar().getMenu(1).setEnabled(false);
+		}
+		else
+		{
+			gameWindow.getJMenuBar().getMenu(0).getItem(1).setSelected(true);
+			gameWindow.getJMenuBar().getMenu(1).setEnabled(true);
+		}
+	}
+
+	// persist mover through game instances
+	public void persistMover()
+	{
+		if (!StateManager.isAiMovingFirst)
+		{
+			gameWindow.getJMenuBar().getMenu(1).getItem(0).setSelected(true);
+		}
+		else
+		{
+			gameWindow.getJMenuBar().getMenu(1).getItem(1).setSelected(true);
+		}
+	}
+
 	public void addKeyListener()
 	{
 		this.gameWindow.addKeyListener(new KeyListener() 

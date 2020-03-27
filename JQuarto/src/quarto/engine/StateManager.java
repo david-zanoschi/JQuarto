@@ -19,7 +19,7 @@ public class StateManager
 	private static InfoPanel infoPanel;
 	private static PiecesPanel piecesPanel;
 	private static TilesPanel tilesPanel;
-	private static GameWindow gameWindow;
+	private static GameWindow window;
 	
 	public static boolean isPieceChosen = false;
 	public static boolean isPiecePlaced = false;
@@ -48,9 +48,9 @@ public class StateManager
 	
 	private static void configure()
 	{
-		if(gameWindow != null) 
+		if(window != null)
 		{
-			gameWindow.close();
+			window.close();
 		}
 		
 		board.setFirstPlayer();
@@ -59,9 +59,9 @@ public class StateManager
 		piecesPanel = new PiecesPanel(board);
 		tilesPanel = new TilesPanel(board);
 		
-		gameWindow = new GameWindow(infoPanel, piecesPanel, tilesPanel);
-		isAiOpponentSelected = gameWindow.isAiOpponentSelected();
-		isAiMovingFirst = gameWindow.isAiMovingFirst();
+		window = new GameWindow(infoPanel, piecesPanel, tilesPanel);
+		isAiOpponentSelected = window.isAiOpponentSelected();
+		isAiMovingFirst = window.isAiMovingFirst();
 	}
 	
 	public static void run()
@@ -74,9 +74,9 @@ public class StateManager
 		tilesPanel.draw();
 		tilesPanel.disableMouseListeners();
 
-		gameWindow.draw();
+		window.draw();
 
-		if (AiHelper.aiShouldMove(gameWindow))
+		if (AiHelper.aiShouldMove(window))
 		{
 			AiPlayer.chooseNotWinningPiece(piecesPanel);
 		}
@@ -95,7 +95,7 @@ public class StateManager
 		piecesPanel.disableMouseListeners();
 		tilesPanel.enableMouseListeners();
 
-		if(AiHelper.aiShouldMove(gameWindow))
+		if(AiHelper.aiShouldMove(window))
 		{
 			AiPlayer.PlaceWinningOrRandomPiece(piecesPanel.getBoard());
 		}
@@ -133,7 +133,7 @@ public class StateManager
 			
 			infoPanel.setInfo(GuiHelper.DRAW);
 		}
-		else if (AiHelper.aiShouldMove(gameWindow))
+		else if (AiHelper.aiShouldMove(window))
 		{
 			AiPlayer.chooseNotWinningPiece(piecesPanel);
 		}
@@ -161,16 +161,15 @@ public class StateManager
 
 	public static void decideWhatAiDoes()
 	{
-		if (AiHelper.aiShouldMove(gameWindow) && !isPieceChosen)
+		if (AiHelper.aiShouldMove(window) && !isPieceChosen)
 		{
 			AiPlayer.chooseNotWinningPiece(piecesPanel);
 		}
-		else if (AiHelper.aiShouldMove(gameWindow) && isPieceChosen && !isPiecePlaced)
+		else if (AiHelper.aiShouldMove(window) && isPieceChosen && !isPiecePlaced)
 		{
 			AiPlayer.PlaceWinningOrRandomPiece(piecesPanel.getBoard());
 		}
 	}
-
 
 	// Threads
 	public static Set<Thread> threadSet;

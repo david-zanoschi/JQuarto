@@ -8,8 +8,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
+import javax.swing.*;
+import javax.swing.plaf.nimbus.State;
 
+import quarto.engine.StateManager;
 import quarto.engine.board.Board;
 
 public class GuiHelper 
@@ -90,6 +92,55 @@ public class GuiHelper
 	public static String computeGameOverMessage(String playerName)
 	{
 		return "Game over. Player " + playerName + " won";
+	}
+
+	public static JRadioButtonMenuItem createOpponentButton (GameWindow window, String label)
+	{
+		JRadioButtonMenuItem button = new JRadioButtonMenuItem(label);
+		button.addActionListener(e -> {
+			StateManager.isAiOpponentSelected = window.isAiOpponentSelected();
+			window.getGameWindow().getJMenuBar().getMenu(1).setEnabled(StateManager.isAiOpponentSelected);
+			if (StateManager.moveCounter > 1)
+			{
+				StateManager.restart();
+			}
+		});
+		return button;
+	}
+
+	public static JRadioButtonMenuItem createMoverButton (GameWindow window, String label)
+	{
+		JRadioButtonMenuItem button = new JRadioButtonMenuItem(label);
+		button.addActionListener(e -> {
+			StateManager.isAiMovingFirst = window.isAiMovingFirst();
+			if (!StateManager.isAiMovingFirst)
+			{
+				StateManager.restart();
+			}
+			else
+			{
+				if (StateManager.moveCounter == 1)
+				{
+					StateManager.decideWhatAiDoes();
+				}
+				else
+				{
+					StateManager.restart();
+				}
+			}
+		});
+		return button;
+	}
+
+	public static JMenu configureMenu(String label, ButtonGroup buttonGroup, JRadioButtonMenuItem... buttons)
+	{
+		JMenu menu = new JMenu(label);
+		for (JRadioButtonMenuItem radioButton : buttons)
+		{
+			buttonGroup.add(radioButton);
+			menu.add(radioButton);
+		}
+		return menu;
 	}
 }
 
