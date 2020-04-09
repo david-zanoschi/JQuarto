@@ -8,24 +8,12 @@ import quarto.engine.pieces.Piece;
 
 public abstract class Tile 
 {
-	protected final int tileCoordinate;
 	private static final Map<Integer, EmptyTile> ALL_EMPTY_TILES = createAllEmptyTiles();
-	
+	protected final int tileCoordinate;
+
 	private Tile(final int tileCoordinate)
 	{
 		this.tileCoordinate = tileCoordinate;
-	}
-	
-	private static Map<Integer, EmptyTile> createAllEmptyTiles()
-	{
-		final Map<Integer, EmptyTile> allEmptyTiles = new HashMap<>();
-		
-		for(int i = 0; i < 16; i++)
-		{
-			allEmptyTiles.put(i, new EmptyTile(i));
-		}
-		
-		return Collections.unmodifiableMap(allEmptyTiles);
 	}
 	
 	public int getCoordinate()
@@ -36,6 +24,18 @@ public abstract class Tile
 	public static Tile create(final int tileCoordinate, final Piece piece)
 	{
 		return piece != null ? new OccupiedTile(tileCoordinate, piece) : ALL_EMPTY_TILES.get(tileCoordinate);
+	}
+
+	private static Map<Integer, EmptyTile> createAllEmptyTiles()
+	{
+		final Map<Integer, EmptyTile> allEmptyTiles = new HashMap<>();
+
+		for(int i = 0; i < 16; i++)
+		{
+			allEmptyTiles.put(i, new EmptyTile(i));
+		}
+
+		return Collections.unmodifiableMap(allEmptyTiles);
 	}
 	
 	public abstract boolean isOccupied();

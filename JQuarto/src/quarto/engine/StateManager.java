@@ -1,7 +1,5 @@
 package quarto.engine;
 
-import java.util.Set;
-
 import quarto.ai.AiHelper;
 import quarto.ai.AiPlayer;
 import quarto.engine.board.Board;
@@ -24,8 +22,7 @@ public class StateManager
 	public static boolean isPieceChosen = false;
 	public static boolean isPiecePlaced = false;
 	public static boolean isAiOpponentSelected;
-	// he who moves first hands the first piece; the second move is placing it a choosing another piece for the opponent
-	public static boolean isAiMovingFirst;
+	public static boolean isAiMovingFirst; // who moves first hands the first piece; second move = place piece + choose piece
 	public static int moveCounter = 1;
 	
 	public StateManager() 
@@ -66,47 +63,45 @@ public class StateManager
 	
 	public static void run()
 	{
-		infoPanel.setInfo(GuiHelper.CHOOSE_PIECE);
-		
-		piecesPanel.draw();
-		piecesPanel.enableMouseListeners();
-		
-		tilesPanel.draw();
-		tilesPanel.disableMouseListeners();
+		infoPanel.setText(GuiHelper.CHOOSE_PIECE);
 
+		piecesPanel.draw();
+		tilesPanel.draw();
 		window.draw();
 
-		if (AiHelper.aiShouldMove(window))
+		piecesPanel.enableMouseListeners();
+		tilesPanel.disableMouseListeners();
+
+		if (AiHelper.isAiMove(window))
 		{
-			AiPlayer.chooseNotWinningPiece(piecesPanel);
+			AiPlayer.choosePiece(piecesPanel);
 		}
 	}
 	
 	public static void pieceChosen()
 	{
 		moveCounter++;
-
 		board.nextPlayer();
 
 		isPieceChosen = true;
 		isPiecePlaced = false;
-		
-		infoPanel.setInfo(GuiHelper.PLACE_PIECE);
+		infoPanel.setText(GuiHelper.PLACE_PIECE);
+
 		piecesPanel.disableMouseListeners();
 		tilesPanel.enableMouseListeners();
 
-		if(AiHelper.aiShouldMove(window))
+		if(AiHelper.isAiMove(window))
 		{
-			AiPlayer.PlaceWinningOrRandomPiece(piecesPanel.getBoard());
+			AiPlayer.placePiece(piecesPanel.getBoard());
 		}
 	}
-	
+
+	// this method can be called without boardParam argument, so it must be checked for null
 	public static void piecePlaced(Board boardParam)
 	{
 		isPieceChosen = false;
 		isPiecePlaced = true;
-		
-		infoPanel.setInfo(GuiHelper.CHOOSE_PIECE);
+		infoPanel.setText(GuiHelper.CHOOSE_PIECE);
 
 		if(boardParam != null)
 		{
@@ -124,22 +119,22 @@ public class StateManager
 			tilesPanel.disableMouseListeners();
 			piecesPanel.disableMouseListeners();
 			
-			infoPanel.setInfo(GuiHelper.computeGameOverMessage(tilesPanel.getBoard().getCurrentPlayerString()));
+			infoPanel.setText(GuiHelper.computeGameOverMessage(tilesPanel.getBoard().getCurrentPlayerString()));
 		} 
 		else if(tilesPanel.getBoard().isDraw())
 		{
 			tilesPanel.disableMouseListeners();
 			piecesPanel.disableMouseListeners();
 			
-			infoPanel.setInfo(GuiHelper.DRAW);
+			infoPanel.setText(GuiHelper.DRAW);
 		}
-		else if (AiHelper.aiShouldMove(window))
+		else if (AiHelper.isAiMove(window))
 		{
-			AiPlayer.chooseNotWinningPiece(piecesPanel);
+			AiPlayer.choosePiece(piecesPanel);
 		}
 	}
 
-	// To simulate optional board parameter
+	// simulates optional board parameter
 	public static void piecePlaced()
 	{
 		piecePlaced(null);
@@ -147,8 +142,6 @@ public class StateManager
 
 	public static void restart()
 	{
-		System.out.print(tilesPanel.getBoard().isGameOver() || tilesPanel.getBoard().isDraw() ? "\n" : "X\n");
-		
 		isPieceChosen = false;
 		isPiecePlaced = false;
 		board = null;
@@ -161,37 +154,37 @@ public class StateManager
 
 	public static void decideWhatAiDoes()
 	{
-		if (AiHelper.aiShouldMove(window) && !isPieceChosen)
+		if (AiHelper.isAiMove(window) && !isPieceChosen)
 		{
-			AiPlayer.chooseNotWinningPiece(piecesPanel);
+			AiPlayer.choosePiece(piecesPanel);
 		}
-		else if (AiHelper.aiShouldMove(window) && isPieceChosen && !isPiecePlaced)
+		else if (AiHelper.isAiMove(window) && isPieceChosen && !isPiecePlaced)
 		{
-			AiPlayer.PlaceWinningOrRandomPiece(piecesPanel.getBoard());
+			AiPlayer.placePiece(piecesPanel.getBoard());
 		}
 	}
 
-	// Threads
-	public static Set<Thread> threadSet;
+	//Threads
+//	public static Set<Thread> threadSet;
 	
-	public static Set<Thread> getThreads() 
-	{
-		return Thread.getAllStackTraces().keySet();
-	}
+//	public static Set<Thread> getThreads()
+//	{
+//		return Thread.getAllStackTraces().keySet();
+//	}
 	
-	public static void logThreads(String location) 
-	{
-		int i = 0;
-		System.out.print(location + ":\n");
-		for(final Thread thread : threadSet) 
-		{
-			System.out.print(i + ") " + thread.toString() + "\n");
-			
-			++i;
-		}
-		System.out.print("Runs on edt: " + javax.swing.SwingUtilities.isEventDispatchThread() + "\n");
-		System.out.print("----------------------\n");
-	}
+//	public static void logThreads(String location)
+//	{
+//		int i = 0;
+//		System.out.print(location + ":\n");
+//		for(final Thread thread : threadSet)
+//		{
+//			System.out.print(i + ") " + thread.toString() + "\n");
+//
+//			++i;
+//		}
+//		System.out.print("Runs on edt: " + javax.swing.SwingUtilities.isEventDispatchThread() + "\n");
+//		System.out.print("----------------------\n");
+//	}
 }
 
 

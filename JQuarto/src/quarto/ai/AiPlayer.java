@@ -5,189 +5,96 @@ import quarto.engine.board.Board;
 import quarto.engine.pieces.Piece;
 import quarto.gui.PiecesPanel;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 public class AiPlayer
 {
-    // place winning piece or place randomly
-    public static void PlaceWinningOrRandomPiece(Board board)
+    // place piece on winning position; if no winning position available, place the piece so the opponent won't invariably win with next move
+    public static void placePiece(Board board)
     {
-        Board.Builder builder = new Board.Builder();
-
-        // current board builder
-        for (Piece placedPiece : board.getPlacedPieces())
-        {
-            builder.setPiece(placedPiece);
-        }
-
-        Piece chosenPiece = board.getChosenPiece();
+        Board.Builder builder = AiHelper.createBuilder(board.getPlacedPieces());
         List<Integer> emptyTilesCoordinates = board.computeEmptyTilesCoordinates();
-        List<Integer> noNoCoordinates = new ArrayList<>();
+        Piece chosenPiece = board.getChosenPiece();
+        List<Integer> safeCoordinate = new ArrayList<>();
 
         for(Integer coordinate : emptyTilesCoordinates)
         {
+            // coordinate, builder
             chosenPiece.place(coordinate);
             Board newBoard = builder.setPiece(chosenPiece).build();
 
-            // winning move
+            // win whenever possible
             if (newBoard.isGameOver())
             {
                 StateManager.piecePlaced(newBoard);
                 return;
             }
-            // if after making the placement, whichever piece is handed is a winning piece, don't place the piece there
-            else if (isWinningPosition(newBoard))
+            // if it's not a winning move, get the non-winning pieces for current placement
+            // if there are non-winning pieces for the current coordinate, store the coordinate
+            if (AiHelper.getNonWinningPieces(newBoard, chosenPiece).size() > 0)
             {
-                noNoCoordinates.add(coordinate);
+                safeCoordinate.add(coordinate);
             }
-
             chosenPiece.resetPosition();
             builder = builder.removePiece(coordinate);
         }
 
         Random random = new Random();
-        int randomCoordinate = emptyTilesCoordinates.get(random.nextInt(emptyTilesCoordinates.size()));
-
-        // if no matter the placement the match is lost, place the piece randomly
-        if (noNoCoordinates.size() == emptyTilesCoordinates.size())
+        int chosenCoordinate;
+        // if the match is lost no matter where the piece is placed, place it randomly
+        if (safeCoordinate.size() == 0)
         {
-            chosenPiece.place(randomCoordinate);
-            Board newBoard = builder.setPiece(chosenPiece).build();
-            StateManager.piecePlaced(newBoard);
+            chosenCoordinate = emptyTilesCoordinates.get(random.nextInt(emptyTilesCoordinates.size()));
         }
-        // else place the piece randomly, but on a position that will not make the opponent win
+        // else pick a coordinate that has no winning pieces
         else
         {
-            while (isNoNoCoordinate(noNoCoordinates, randomCoordinate))
-            {
-                randomCoordinate = emptyTilesCoordinates.get(random.nextInt(emptyTilesCoordinates.size()));
-            }
-
-            chosenPiece.place(randomCoordinate);
-            Board newBoard = builder.setPiece(chosenPiece).build();
-            StateManager.piecePlaced(newBoard);
+            chosenCoordinate = safeCoordinate.get(random.nextInt(safeCoordinate.size()));
         }
+        chosenPiece.place(chosenCoordinate);
+        Board newBoard = builder.setPiece(chosenPiece).build();
+        StateManager.piecePlaced(newBoard);
     }
 
     // choose a piece so the opponent does not win
-    public static void chooseNotWinningPiece(PiecesPanel piecesPanel)
+    public static void choosePiece(PiecesPanel piecesPanel)
     {
         Board board = piecesPanel.getBoard();
-        Board.Builder builder = new Board.Builder();
-
-        // current board builder
-        for (Piece placedPiece : board.getPlacedPieces())
-        {
-            builder.setPiece(placedPiece);
-        }
-
         List<Piece> remainingPieces = board.getRemainingPieces();
-        List<Integer> emptyTilesCoordinates = board.computeEmptyTilesCoordinates();
+        List<Piece> nonWinningPieces = AiHelper.getNonWinningPieces(board);
 
         Random random = new Random();
-        List<Piece> noWinningPieces = new ArrayList<>();
-        // iterate through all remaining pieces, pick the non-winning ones and hand a random one
-        // else hand a winning piece
-        for (Piece remainingPiece : remainingPieces)
+        // hand a random non-winning piece
+        if (nonWinningPieces.size() > 0)
         {
-            if (remainingPiece == null)
-            {
-                continue;
-            }
+            // the reason for this piece of code is that remaining pieces and noWinning pieces are different objects
+            // so choosing a piece from nonWinningPieces itself will not actually choose a piece from the game board
+            Piece chosenPiece;
+            boolean isNonWinningPiece = false;
+            do {
+                chosenPiece = remainingPieces.get(random.nextInt(remainingPieces.size()));
 
-            boolean winningPlacement = false;
-            for (Integer coordinate : emptyTilesCoordinates)
-            {
-                remainingPiece.place(coordinate);
-                Board newBoard = builder.setPiece(remainingPiece).build();
-
-                remainingPiece.resetPosition();
-                builder = builder.removePiece(coordinate);
-
-                if (newBoard.isGameOver())
+                if (chosenPiece != null)
                 {
-                    winningPlacement = true;
-                    break;
+                    for(Piece nonWinningPiece : nonWinningPieces)
+                    {
+                        if (nonWinningPiece.getPieceNumber() == chosenPiece.getPieceNumber())
+                        {
+                            isNonWinningPiece = true;
+                            break;
+                        }
+                    }
                 }
-            }
+            } while (!isNonWinningPiece);
 
-            if (!winningPlacement)
-            {
-                noWinningPieces.add(remainingPiece);
-            }
-        }
-
-        // hand a non winning piece
-        if (noWinningPieces.size() > 0)
-        {
-            piecesPanel.aiChosePiece(noWinningPieces.get(random.nextInt(noWinningPieces.size())));
+            piecesPanel.aiChosePiece(chosenPiece);
             return;
         }
-
-        // hand a winning piece
+        // hand a random winning piece
         Piece winningPiece;
         do {
            winningPiece = remainingPieces.get(random.nextInt(remainingPieces.size()));
         } while (winningPiece == null);
         piecesPanel.aiChosePiece(winningPiece);
-    }
-
-    private static boolean isNoNoCoordinate(List<Integer> noNoCoordinates, int randomCoordinate)
-    {
-        for(Integer noNoCoordinate : noNoCoordinates)
-        {
-            if (randomCoordinate == noNoCoordinate)
-            {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    private static boolean isWinningPosition(Board board)
-    {
-        List<Piece> placedPieces = board.getPlacedPieces();
-        Board.Builder builder = new Board.Builder();
-        // current builder
-        for (Piece placedPiece : placedPieces)
-        {
-            builder.setPiece(placedPiece);
-        }
-
-        boolean isWinningPosition = true;
-        List<Piece> remainingPieces = board.getRemainingPieces();
-        List<Integer> emptyTileCoordinates = board.computeEmptyTilesCoordinates();
-        for (Piece remainingPiece : remainingPieces)
-        {
-            if (remainingPiece == null)
-            {
-                continue;
-            }
-
-            for (Integer coordinate : emptyTileCoordinates)
-            {
-                remainingPiece.place(coordinate);
-                Board newBoard = builder.setPiece(remainingPiece).build();
-
-                remainingPiece.resetPosition();
-                builder = builder.removePiece(coordinate);
-
-                if (!newBoard.isGameOver())
-                {
-                    isWinningPosition = false;
-                    break;
-                }
-            }
-
-            if (!isWinningPosition)
-            {
-                break;
-            }
-        }
-
-        return isWinningPosition;
     }
 }

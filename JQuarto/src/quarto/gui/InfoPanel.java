@@ -27,7 +27,7 @@ public class InfoPanel extends JPanel
 		this.add(this.infoLabel, BorderLayout.CENTER);
 	}
 	
-	public void setInfo(String info)
+	public void setText(String info)
 	{
 		this.infoLabel.setText(info);
 	}

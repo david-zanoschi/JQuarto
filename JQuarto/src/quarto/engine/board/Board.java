@@ -10,14 +10,15 @@ import quarto.engine.pieces.Piece.PieceType;
 
 public class Board 
 {
+	// static fields
 	public static final  List<String> PIECES_NUMBERS_STRINGS = getAllPiecesNumbersAsStrings();
+	private static boolean isPlayerOneMove = true;
 
-	public List<Piece> allPieces;
+	// instance fields
+	final private List<Tile> gameBoard;
+	final public List<Piece> allPieces;
 	private List<Piece> placedPieces;
-	private	List<Piece> remainingPieces;
-	private List<Tile> gameBoard;
-	
-	private static boolean isFirstPlayer = true;
+	private	List<Piece> remainingPieces; // always has a size of 16, with null for placed pieces; it's like that because of the pieces panel
 	private Piece chosenPiece = null;
 	
 	Board(Builder builder)
@@ -30,22 +31,22 @@ public class Board
 	
 	public boolean isFirstPlayer()
 	{
-		return isFirstPlayer;
+		return isPlayerOneMove;
 	}
 	
 	public String getCurrentPlayerString() 
 	{
-		return isFirstPlayer ? "1" : "2";
+		return isPlayerOneMove ? "1" : "2";
 	}
 	
 	public void nextPlayer() 
 	{
-		isFirstPlayer = !isFirstPlayer;
+		isPlayerOneMove = !isPlayerOneMove;
 	}
 	
 	public void setFirstPlayer() 
 	{
-		isFirstPlayer = true;
+		isPlayerOneMove = true;
 	}
 	
 	public List<Piece> getPlacedPieces()
@@ -68,7 +69,7 @@ public class Board
 		return this.gameBoard.get(tileCoordinate);
 	}
 	
-	public Piece getChosenPiece() 
+	public Piece getChosenPiece()
 	{
 		return this.chosenPiece;
 	}
@@ -197,7 +198,7 @@ public class Board
 
 	private List<Piece> computeAllPieces()
 	{
-		List<Piece> result = createAllPieces();
+		final List<Piece> allPieces = createAllPieces();
 
 		for(int i = 0; i < BoardHelper.NUM_TILES; i++)
 		{
@@ -205,16 +206,16 @@ public class Board
 
 			if(ithTile.isOccupied())
 			{
-				result.set(ithTile.getPieceOnTile().getPieceNumber(), this.gameBoard.get(i).getPieceOnTile());
+				allPieces.set(ithTile.getPieceOnTile().getPieceNumber(), this.gameBoard.get(i).getPieceOnTile());
 			}
 		}
 
-		return result;
+		return allPieces;
 	}
 	
 	private List<Piece> computePlacedPieces()
 	{
-		List<Piece> placedPieces = new ArrayList<>();
+		final List<Piece> placedPieces = new ArrayList<>();
 		
 		for(final Piece piece : this.allPieces)
 		{
@@ -229,7 +230,7 @@ public class Board
 	
 	private List<Piece> computeRemainingPieces()
 	{
-		List<Piece> remainingPieces = new ArrayList<>();
+		final List<Piece> remainingPieces = new ArrayList<>();
 
 		for(final Piece piece : this.allPieces)
 		{
@@ -272,7 +273,7 @@ public class Board
 		
 		public Builder setPiece(final Piece piece)
 		{
-			this.boardConfiguration.put(piece.getPosition(), piece);
+			this.boardConfiguration.put(piece.getCoordinate(), piece);
 			return this;
 		}
 

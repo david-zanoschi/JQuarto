@@ -11,7 +11,7 @@ public class BoardHelper
 	
 	private static Integer[] computeRow(final int rowNumber)
 	{
-		Integer[] row = new Integer[NUM_TILES_PER_LINE];
+		final Integer[] row = new Integer[NUM_TILES_PER_LINE];
 		
 		for(int i = 0; i < NUM_TILES_PER_LINE; i++)
 		{
@@ -23,7 +23,7 @@ public class BoardHelper
 	
 	private static Integer[] computeColumn(final int columnNumber)
 	{
-		Integer[] column = new Integer[NUM_TILES_PER_LINE];
+		final Integer[] column = new Integer[NUM_TILES_PER_LINE];
 		
 		for(int i = 0; i < NUM_TILES_PER_LINE; i++)
 		{
@@ -35,10 +35,10 @@ public class BoardHelper
 	
 	private static Integer[] computeDiagonal(final int diagonalNumber)
 	{
-		Integer[] diagonal = new Integer[NUM_TILES_PER_LINE];
+		final Integer[] diagonal = new Integer[NUM_TILES_PER_LINE];
 		
 		int startValue = diagonalNumber == 0 ? 3 : 0;
-		int increment = diagonalNumber == 0 ? 3 : 5;
+		final int increment = diagonalNumber == 0 ? 3 : 5;
 		
 		for(int i = 0; i < NUM_TILES_PER_LINE; i++)
 		{
@@ -51,16 +51,16 @@ public class BoardHelper
 	
 	private static List<Integer[]> computeBoardLines()
 	{
-		List<Integer[]> lines = new ArrayList<>();
+		final List<Integer[]> lines = new ArrayList<>();
 		
 		for(int i = 0; i < NUM_TILES_PER_LINE; i++)
 		{
 			lines.add(computeRow(i));
 			lines.add(computeColumn(i));
 		}
-		
-		lines.add(computeDiagonal(0));
-		lines.add(computeDiagonal(1));
+
+		lines.add(computeDiagonal(0)); // first-diagonal
+		lines.add(computeDiagonal(1)); // second-diagonal
 		
 		return lines;
 	}

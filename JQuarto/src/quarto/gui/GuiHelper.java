@@ -9,7 +9,6 @@ import java.util.Map;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
-import javax.swing.plaf.nimbus.State;
 
 import quarto.engine.StateManager;
 import quarto.engine.board.Board;
@@ -17,16 +16,17 @@ import quarto.engine.board.Board;
 public class GuiHelper 
 {
 	private final static String DEFAULT_PIECE_SLOT_ICON_PATH = "PieceSlot";
-	private final static String ALTERNATE_PIECE_SLOT_ICON_PATH = "AlternatePieceSlot";
-	
+	private final static String HIGHLIGHTED_PIECE_SLOT_ICON_PATH = "AlternatePieceSlot";
+
+	// info panel messages
 	public final static String CHOOSE_PIECE = "Choose a piece for your opponent";
 	public final static String PLACE_PIECE = "Place the chosen piece on the table";
 	public final static String DRAW = "Draw.";
 	
 	public final static ImageIcon TILE_ICON = getTileIcon(DEFAULT_PIECE_SLOT_ICON_PATH);
-	public final static ImageIcon ALTERNATE_TILE_ICON = getTileIcon(ALTERNATE_PIECE_SLOT_ICON_PATH);
+	public final static ImageIcon HIGHLIGHTED_TILE_ICON = getTileIcon(HIGHLIGHTED_PIECE_SLOT_ICON_PATH);
 	public final static Map<String, ImageIcon> PIECES_ICONS = getPiecesIcons("");
-	public final static Map<String, ImageIcon> PIECE_SLOTS_ICONS = getPiecesIcons("Slot");
+	public final static Map<String, ImageIcon> OCCUPIED_PIECE_SLOTS_ICONS = getPiecesIcons("Slot");
 
 	private static ImageIcon getTileIcon(String iconPath)
 	{
@@ -42,16 +42,14 @@ public class GuiHelper
 		}
 
 		assert tileBufferedImage != null;
-		Image tileImage = tileBufferedImage.getScaledInstance(	TilesPanel.TILE_SIZE,
-																TilesPanel.TILE_SIZE, 
-																Image.SCALE_SMOOTH);
+		Image tileImage = tileBufferedImage.getScaledInstance(TilesPanel.TILE_SIZE, TilesPanel.TILE_SIZE, Image.SCALE_SMOOTH);
 
 		return new ImageIcon(tileImage);
 	}
 	
 	private static Map<String, ImageIcon> getPiecesIcons(String input)
 	{
-		Map<String, ImageIcon> result = new HashMap<>();
+		Map<String, ImageIcon> pieceIconMap = new HashMap<>();
 		
 		for(String pieceNumber : Board.PIECES_NUMBERS_STRINGS)
 		{
@@ -68,25 +66,22 @@ public class GuiHelper
 			}
 			
 			Image pieceImage;
-			
+
+			assert pieceBufferedImage != null;
 			if(input.equals("Slot"))
 			{
-				assert pieceBufferedImage != null;
-				pieceImage = pieceBufferedImage.getScaledInstance(	TilesPanel.TILE_SIZE,
-																	TilesPanel.TILE_SIZE, 
-																	Image.SCALE_SMOOTH);
+				pieceImage = pieceBufferedImage.getScaledInstance(TilesPanel.TILE_SIZE, TilesPanel.TILE_SIZE, Image.SCALE_SMOOTH);
 			}
 			else
 			{
-				assert pieceBufferedImage != null;
 				pieceImage = pieceBufferedImage.getScaledInstance(PiecesPanel.PIECE_SIZE, PiecesPanel.PIECE_SIZE, Image.SCALE_SMOOTH);
 			}
 
 			ImageIcon pieceImageIcon = new ImageIcon(pieceImage);
-			result.put(key, pieceImageIcon);
+			pieceIconMap.put(key, pieceImageIcon);
 		}
 		
-		return result;
+		return pieceIconMap;
 	}
 	
 	public static String computeGameOverMessage(String playerName)
@@ -96,8 +91,8 @@ public class GuiHelper
 
 	public static JRadioButtonMenuItem createOpponentButton (GameWindow window, String label)
 	{
-		JRadioButtonMenuItem button = new JRadioButtonMenuItem(label);
-		button.addActionListener(e -> {
+		JRadioButtonMenuItem opponentButton = new JRadioButtonMenuItem(label);
+		opponentButton.addActionListener(e -> {
 			StateManager.isAiOpponentSelected = window.isAiOpponentSelected();
 			window.getGameWindow().getJMenuBar().getMenu(1).setEnabled(StateManager.isAiOpponentSelected);
 			if (StateManager.moveCounter > 1)
@@ -105,13 +100,13 @@ public class GuiHelper
 				StateManager.restart();
 			}
 		});
-		return button;
+		return opponentButton;
 	}
 
 	public static JRadioButtonMenuItem createMoverButton (GameWindow window, String label)
 	{
-		JRadioButtonMenuItem button = new JRadioButtonMenuItem(label);
-		button.addActionListener(e -> {
+		JRadioButtonMenuItem moverButton = new JRadioButtonMenuItem(label);
+		moverButton.addActionListener(e -> {
 			StateManager.isAiMovingFirst = window.isAiMovingFirst();
 			if (!StateManager.isAiMovingFirst)
 			{
@@ -129,7 +124,7 @@ public class GuiHelper
 				}
 			}
 		});
-		return button;
+		return moverButton;
 	}
 
 	public static JMenu configureMenu(String label, ButtonGroup buttonGroup, JRadioButtonMenuItem... buttons)

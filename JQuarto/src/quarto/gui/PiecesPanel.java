@@ -162,7 +162,10 @@ public class PiecesPanel extends JPanel
 						for(Piece remainingPiece : board.getRemainingPieces())
 						{
 							if(remainingPiece == null)
+							{
 								continue;
+							}
+
 
 							if(remainingPiece.getPieceNumber() == pieceLabelPieceMap.get(label).getPieceNumber())
 							{
@@ -184,26 +187,26 @@ public class PiecesPanel extends JPanel
 		}
 	}
 
-	public void aiChosePiece(Piece piece)
+	public void aiChosePiece(Piece pieceParam)
 	{
-		for (Entry<JLabel, Piece> entry : this.pieceLabelPieceMap.entrySet())
+		for (Entry<JLabel, Piece> labelPieceKeyValue : this.pieceLabelPieceMap.entrySet())
 		{
-			JLabel entryLabel = entry.getKey();
-			Piece entryPiece = entry.getValue();
+			JLabel pLabel = labelPieceKeyValue.getKey();
+			Piece piece = labelPieceKeyValue.getValue();
 
-			if (entryPiece.getPieceNumber() == piece.getPieceNumber())
+			if (piece.getPieceNumber() == pieceParam.getPieceNumber())
 			{
-				entryLabel.setBackground(new Color(252, 3, 3));
+				pLabel.setBackground(new Color(252, 3, 3));
 
-				for (Entry<JLabel, MouseListener> labelMouse : this.pieceLabelMouseListenerMap.entrySet())
+				for (Entry<JLabel, MouseListener> labelMouseListenerKeyValue : this.pieceLabelMouseListenerMap.entrySet())
 				{
-					JLabel label = labelMouse.getKey();
-					MouseListener mouseListener = labelMouse.getValue();
+					JLabel mLabel = labelMouseListenerKeyValue.getKey();
+					MouseListener mouseListener = labelMouseListenerKeyValue.getValue();
 
-					if (label == entryLabel)
+					if (mLabel == pLabel)
 					{
-						pieceLabelMouseListenerMap.remove(label);
-						label.removeMouseListener(mouseListener);
+						pieceLabelMouseListenerMap.remove(mLabel);
+						mLabel.removeMouseListener(mouseListener);
 						break;
 					}
 				}
@@ -217,7 +220,7 @@ public class PiecesPanel extends JPanel
 				continue;
 			}
 
-			if (remainingPiece.getPieceNumber() == piece.getPieceNumber())
+			if (remainingPiece.getPieceNumber() == pieceParam.getPieceNumber())
 			{
 				remainingPiece.choose();
 				board.setChosenPiece();

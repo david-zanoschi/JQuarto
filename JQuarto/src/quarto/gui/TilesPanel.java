@@ -1,16 +1,11 @@
 package quarto.gui;
 
-import java.awt.AWTException;
-import java.awt.GridLayout;
-import java.awt.Point;
-import java.awt.event.InputEvent;
+import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.awt.Robot;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -81,17 +76,22 @@ public class TilesPanel extends JPanel
 	{
 		for (Piece placedPiece : this.board.getPlacedPieces())
 		{
-			for (Entry<JLabel, Tile> entry : this.tileLabelTileMap.entrySet())
+			for (Entry<JLabel, Tile> labelTileKeyValue : this.tileLabelTileMap.entrySet())
 			{
-				if (placedPiece.getPosition() == entry.getValue().getCoordinate())
+				Tile tile = labelTileKeyValue.getValue();
+				if (placedPiece.getCoordinate() == tile.getCoordinate())
 				{
-					entry.getKey().setIcon(GuiHelper.PIECE_SLOTS_ICONS.get(placedPiece.getPieceNumberAsString() + "Slot"));
+					JLabel label = labelTileKeyValue.getKey();
+					label.setIcon(GuiHelper.OCCUPIED_PIECE_SLOTS_ICONS.get(placedPiece.getPieceNumberAsString() + "Slot"));
 
-					for (Entry<JLabel, MouseListener> labelMouse : this.tileLabelMouseListenerMap.entrySet())
+					for (Entry<JLabel, MouseListener> labelMouseListenerKeyValue : this.tileLabelMouseListenerMap.entrySet())
 					{
-						if(labelMouse.getKey() == entry.getKey())
+						JLabel mLabel = labelMouseListenerKeyValue.getKey();
+						JLabel tLabel = labelTileKeyValue.getKey();
+						if (mLabel == tLabel)
 						{
-							labelMouse.getKey().removeMouseListener(labelMouse.getValue());
+							MouseListener mouseListener = labelMouseListenerKeyValue.getValue();
+							mLabel.removeMouseListener(mouseListener);
 						}
 					}
 				}
@@ -138,22 +138,23 @@ public class TilesPanel extends JPanel
 				{
 					if (!StateManager.isPiecePlaced && areMouseListenersEnabled)
 					{
-						label.setIcon(GuiHelper.ALTERNATE_TILE_ICON);
+						label.setIcon(GuiHelper.HIGHLIGHTED_TILE_ICON);
 					}
 				}
 
 				@Override
 				public void mouseClicked(MouseEvent e)
 				{
-					if (!tileLabelTileMap.get(label).isOccupied() && areMouseListenersEnabled)
+					Tile currentTile = tileLabelTileMap.get(label);
+					if (!currentTile.isOccupied() && areMouseListenersEnabled)
 					{
 						Piece chosenPiece = board.getChosenPiece();
-						chosenPiece.place(tileLabelTileMap.get(label).getCoordinate());
+						chosenPiece.place(currentTile.getCoordinate());
 
 						board = board.update();
 						setBoard(board);
 
-						label.setIcon(GuiHelper.PIECE_SLOTS_ICONS.get(chosenPiece.getPieceNumberAsString() + "Slot"));
+						label.setIcon(GuiHelper.OCCUPIED_PIECE_SLOTS_ICONS.get(chosenPiece.getPieceNumberAsString() + "Slot"));
 
 						StateManager.piecePlaced();
 
@@ -168,36 +169,36 @@ public class TilesPanel extends JPanel
 		}
 	}
 	
-	public void simulateClick(int tileCoordinate) 
-	{
-		Iterator<Entry<JLabel, Tile>> mapIterator = tileLabelTileMap.entrySet().iterator();
-		
-		while(mapIterator.hasNext())
-		{
-			Tile tile = mapIterator.next().getValue();
-			
-			if(tile.getCoordinate() == tileCoordinate)
-			{
-				JLabel label = mapIterator.next().getKey();
-				Point originPoint = label.getLocationOnScreen();
-				
-				try 
-				{
-					Robot robot = new Robot();
-					robot.mouseMove(originPoint.x + 1, originPoint.y + 1);
-					robot.mousePress(InputEvent.BUTTON1_DOWN_MASK);
-					robot.mouseRelease(InputEvent.BUTTON1_DOWN_MASK);
-					break;
-				}
-				catch (AWTException e) 
-				{
-					e.printStackTrace();
-				}
-			}
-			
-		}
-		
-	}
+//	public void simulateClick(int tileCoordinate)
+//	{
+//		Iterator<Entry<JLabel, Tile>> mapIterator = tileLabelTileMap.entrySet().iterator();
+//
+//		while(mapIterator.hasNext())
+//		{
+//			Tile tile = mapIterator.next().getValue();
+//
+//			if(tile.getCoordinate() == tileCoordinate)
+//			{
+//				JLabel label = mapIterator.next().getKey();
+//				Point originPoint = label.getLocationOnScreen();
+//
+//				try
+//				{
+//					Robot robot = new Robot();
+//					robot.mouseMove(originPoint.x + 1, originPoint.y + 1);
+//					robot.mousePress(InputEvent.BUTTON1_DOWN_MASK);
+//					robot.mouseRelease(InputEvent.BUTTON1_DOWN_MASK);
+//					break;
+//				}
+//				catch (AWTException e)
+//				{
+//					e.printStackTrace();
+//				}
+//			}
+//
+//		}
+//
+//	}
 }
 
 

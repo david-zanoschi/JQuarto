@@ -2,7 +2,7 @@ package quarto.engine.pieces;
 
 public class Piece 
 {	
-	protected int piecePosition;
+	protected int pieceCoordinate;
 	protected final PieceType pieceType;
 	protected final Integer pieceNumber;
 	protected boolean isChosen = false;
@@ -14,9 +14,9 @@ public class Piece
 		this.pieceNumber = pieceNumber;
 	}
 	
-	public int getPosition()
+	public int getCoordinate()
 	{
-		return this.piecePosition;
+		return this.pieceCoordinate;
 	}
 	
 	public PieceType getType()
@@ -51,22 +51,21 @@ public class Piece
 	
 	public void place(int positionCoordinate)
 	{
-		this.piecePosition = positionCoordinate;
+		this.pieceCoordinate = positionCoordinate;
 		this.isPlaced = true;
 		this.isChosen = false;
+	}
+
+	public void resetPosition()
+	{
+		this.pieceCoordinate = 0;
+		this.isPlaced = false;
 	}
 	
 	public void reset() 
 	{
-		this.piecePosition = 0;
+		resetPosition();
 		this.isChosen = false;
-		this.isPlaced = false;
-	}
-	
-	public void resetPosition() 
-	{
-		this.piecePosition = 0;
-		this.isPlaced = false;
 	}
 	
 	public enum PieceType
@@ -93,10 +92,7 @@ public class Piece
 		private PieceShape pieceShape;
 		private PieceTopper pieceTopper;
 		
-		PieceType(	final PieceColor pieceColor,
-							final PieceHeight pieceHeight,
-							final PieceShape pieceShape,
-							final PieceTopper pieceTopper) 
+		PieceType(final PieceColor pieceColor, final PieceHeight pieceHeight, final PieceShape pieceShape, final PieceTopper pieceTopper)
 		{
 			this.pieceColor = pieceColor;
 			this.pieceHeight = pieceHeight;

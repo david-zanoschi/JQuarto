@@ -34,7 +34,6 @@ public class GameWindow
 		this.gameWindow.add(tilesPanel, BorderLayout.NORTH);
 		this.gameWindow.add(infoPanel, BorderLayout.CENTER);
 		this.gameWindow.add(piecesPanel, BorderLayout.SOUTH);
-		
 		this.gameWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.addKeyListener();
 	}
