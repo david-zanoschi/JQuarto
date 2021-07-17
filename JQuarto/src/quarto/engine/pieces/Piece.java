@@ -1,75 +1,62 @@
 package quarto.engine.pieces;
 
-public class Piece 
-{	
+public class Piece {
 	protected int pieceCoordinate;
 	protected final PieceType pieceType;
 	protected final Integer pieceNumber;
 	protected boolean isChosen = false;
 	protected boolean isPlaced = false;
-	
-	public Piece(final PieceType pieceType, final Integer pieceNumber)
-	{
+
+	public Piece(final PieceType pieceType, final Integer pieceNumber) {
 		this.pieceType = pieceType;
 		this.pieceNumber = pieceNumber;
 	}
-	
-	public int getCoordinate()
-	{
+
+	public int getCoordinate() {
 		return this.pieceCoordinate;
 	}
-	
-	public PieceType getType()
-	{
+
+	public PieceType getType() {
 		return this.pieceType;
 	}
 
-	public int getPieceNumber()
-	{
+	public int getPieceNumber() {
 		return this.pieceNumber;
 	}
-	
-	public String getPieceNumberAsString()
-	{
+
+	public String getPieceNumberAsString() {
 		return this.pieceNumber.toString();
 	}
-	
-	public boolean isChosen()
-	{
+
+	public boolean isChosen() {
 		return this.isChosen;
 	}
-	
-	public boolean isPlaced()
-	{
+
+	public boolean isPlaced() {
 		return this.isPlaced;
 	}
-	
-	public void choose()
-	{
+
+	public void choose() {
 		this.isChosen = true;
 	}
-	
-	public void place(int positionCoordinate)
-	{
+
+	public void place(int positionCoordinate) {
 		this.pieceCoordinate = positionCoordinate;
 		this.isPlaced = true;
 		this.isChosen = false;
 	}
 
-	public void resetPosition()
-	{
+	public void resetPosition() {
 		this.pieceCoordinate = 0;
 		this.isPlaced = false;
 	}
-	
-	public void reset() 
-	{
+
+	public void reset() {
 		resetPosition();
 		this.isChosen = false;
 	}
-	
-	public enum PieceType
-	{
+
+	public enum PieceType {
 		CHST(PieceColor.LIGHT, PieceHeight.TALL, PieceShape.ROUND, PieceTopper.FLAT),
 		ChST(PieceColor.LIGHT, PieceHeight.SHORT, PieceShape.ROUND, PieceTopper.FLAT),
 		CHsT(PieceColor.LIGHT, PieceHeight.TALL, PieceShape.SQUARE, PieceTopper.FLAT),
@@ -86,125 +73,84 @@ public class Piece
 		cHst(PieceColor.DARK, PieceHeight.TALL, PieceShape.SQUARE, PieceTopper.HOLE),
 		chSt(PieceColor.DARK, PieceHeight.SHORT, PieceShape.ROUND, PieceTopper.HOLE),
 		chst(PieceColor.DARK, PieceHeight.SHORT, PieceShape.SQUARE, PieceTopper.HOLE);
-		
+
 		private PieceColor pieceColor;
 		private PieceHeight pieceHeight;
 		private PieceShape pieceShape;
 		private PieceTopper pieceTopper;
-		
-		PieceType(final PieceColor pieceColor, final PieceHeight pieceHeight, final PieceShape pieceShape, final PieceTopper pieceTopper)
-		{
+
+		PieceType(final PieceColor pieceColor, final PieceHeight pieceHeight, final PieceShape pieceShape,
+				final PieceTopper pieceTopper) {
 			this.pieceColor = pieceColor;
 			this.pieceHeight = pieceHeight;
 			this.pieceShape = pieceShape;
 			this.pieceTopper = pieceTopper;
 		}
-		
+
 		@Override
-		public String toString()
-		{
-			return  this.pieceColor.toString() +
-					this.pieceHeight.toString() +
-					this.pieceShape.toString() +
-					this.pieceTopper.toString();
+		public String toString() {
+			return this.pieceColor.toString() + this.pieceHeight.toString() + this.pieceShape.toString()
+					+ this.pieceTopper.toString();
 		}
 	}
-	
-	public enum PieceColor
-	{
-		LIGHT("C"),
-		DARK("c");
-		
+
+	public enum PieceColor {
+		LIGHT("C"), DARK("c");
+
 		private String color;
-		
-		PieceColor(final String color)
-		{
+
+		PieceColor(final String color) {
 			this.color = color;
 		}
-		
+
 		@Override
-		public String toString()
-		{
+		public String toString() {
 			return this.color;
 		}
 	}
-	
-	public enum PieceHeight
-	{
-		TALL("H"),
-		SHORT("h");
-		
+
+	public enum PieceHeight {
+		TALL("H"), SHORT("h");
+
 		private String height;
-		
-		PieceHeight(final String height)
-		{
+
+		PieceHeight(final String height) {
 			this.height = height;
 		}
-		
+
 		@Override
-		public String toString() 
-		{
+		public String toString() {
 			return this.height;
 		}
 	}
-	
-	public enum PieceShape
-	{
-		ROUND("S"),
-		SQUARE("s");
-		
+
+	public enum PieceShape {
+		ROUND("S"), SQUARE("s");
+
 		private String shape;
-		
-		PieceShape(final String shape)
-		{
+
+		PieceShape(final String shape) {
 			this.shape = shape;
 		}
-		
+
 		@Override
-		public String toString() 
-		{
+		public String toString() {
 			return this.shape;
 		}
 	}
-	
-	public enum PieceTopper
-	{
-		FLAT("T"),
-		HOLE("t");
-		
+
+	public enum PieceTopper {
+		FLAT("T"), HOLE("t");
+
 		private String topper;
-		
-		PieceTopper(final String topper)
-		{
+
+		PieceTopper(final String topper) {
 			this.topper = topper;
 		}
-		
+
 		@Override
-		public String toString() 
-		{
+		public String toString() {
 			return this.topper;
 		}
 	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

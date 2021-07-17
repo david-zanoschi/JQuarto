@@ -17,55 +17,47 @@ import quarto.engine.board.Board;
 import quarto.engine.pieces.Piece;
 
 @SuppressWarnings("serial")
-public class PiecesPanel extends JPanel
-{
+public class PiecesPanel extends JPanel {
 	public final static int PIECES_PER_ROW = 8;
 	public final static int PIECES_PER_COLUMN = 2;
-	public final static int PIECE_SIZE = GameWindow.WINDOW_WIDTH / PIECES_PER_ROW;	
+	public final static int PIECE_SIZE = GameWindow.WINDOW_WIDTH / PIECES_PER_ROW;
 	public final static int PIECES_PANEL_WIDTH = GameWindow.WINDOW_WIDTH;
 	public final static int PIECES_PANEL_HEIGHT = PIECES_PER_ROW * PIECE_SIZE;
-	
+
 	private boolean areMouseListenersEnabled = true;
 	private Board board;
 	private Map<JLabel, Piece> pieceLabelPieceMap;
 	private Map<JLabel, MouseListener> pieceLabelMouseListenerMap;
-	
-	public PiecesPanel(Board board) 
-	{
+
+	public PiecesPanel(Board board) {
 		this.board = board;
 		this.pieceLabelPieceMap = new HashMap<>();
 		this.pieceLabelMouseListenerMap = new HashMap<>();
-		
+
 		this.configure();
 	}
-	
-	private void configure()
-	{	
+
+	private void configure() {
 		this.setLayout(new GridLayout(PIECES_PER_COLUMN, PIECES_PER_ROW));
 		this.setSize(new Dimension(PIECES_PANEL_WIDTH, PIECES_PANEL_HEIGHT));
 	}
-	
-	public Board getBoard()
-	{
+
+	public Board getBoard() {
 		return this.board;
 	}
-	
-	public void setBoard(Board board)
-	{
+
+	public void setBoard(Board board) {
 		this.board = board;
 	}
 
 	// called on board initialization
-	public void draw()
-	{
+	public void draw() {
 		this.removeAll();
 
-		for (Piece remainingPiece : this.board.getRemainingPieces())
-		{
+		for (Piece remainingPiece : this.board.getRemainingPieces()) {
 			JLabel pieceLabel = new JLabel();
 
-			if (remainingPiece != null)
-			{
+			if (remainingPiece != null) {
 				pieceLabel.setIcon(GuiHelper.PIECES_ICONS.get(remainingPiece.getPieceNumberAsString()));
 				pieceLabel.setOpaque(true);
 
@@ -75,23 +67,19 @@ public class PiecesPanel extends JPanel
 
 			this.add(pieceLabel);
 		}
-		
+
 		this.addMouseListeners();
 	}
-	
-	public void updatePieces()
-	{
+
+	public void updatePieces() {
 		boolean matchFound = false;
 
-		for (Entry<JLabel, Piece> entry : pieceLabelPieceMap.entrySet())
-		{
+		for (Entry<JLabel, Piece> entry : pieceLabelPieceMap.entrySet()) {
 			JLabel pieceLabel = entry.getKey();
 			Piece piece = entry.getValue();
 
-			for (Piece placedPiece: this.board.getPlacedPieces())
-			{
-				if (placedPiece.getPieceNumber() == piece.getPieceNumber() && pieceLabel.getIcon() != null)
-				{
+			for (Piece placedPiece : this.board.getPlacedPieces()) {
+				if (placedPiece.getPieceNumber() == piece.getPieceNumber() && pieceLabel.getIcon() != null) {
 					pieceLabel.setIcon(null);
 					pieceLabel.setOpaque(false);
 
@@ -100,31 +88,25 @@ public class PiecesPanel extends JPanel
 				}
 			}
 
-			if (matchFound)
-			{
+			if (matchFound) {
 				break;
 			}
 		}
 	}
-	
-	public void disableMouseListeners()
-	{
+
+	public void disableMouseListeners() {
 		this.areMouseListenersEnabled = false;
 	}
-	
-	public void enableMouseListeners()
-	{
+
+	public void enableMouseListeners() {
 		this.areMouseListenersEnabled = true;
 	}
-	
-	private void addMouseListeners()
-	{
-		for (Entry<JLabel, MouseListener> entry : this.pieceLabelMouseListenerMap.entrySet())
-		{
+
+	private void addMouseListeners() {
+		for (Entry<JLabel, MouseListener> entry : this.pieceLabelMouseListenerMap.entrySet()) {
 			JLabel label = entry.getKey();
 
-			MouseListener mouseListener = new MouseListener()
-			{
+			MouseListener mouseListener = new MouseListener() {
 				@Override
 				public void mouseReleased(MouseEvent e) {
 				}
@@ -134,41 +116,31 @@ public class PiecesPanel extends JPanel
 				}
 
 				@Override
-				public void mouseExited(MouseEvent e)
-				{
-					if (!StateManager.isPieceChosen && areMouseListenersEnabled)
-					{
+				public void mouseExited(MouseEvent e) {
+					if (!StateManager.isPieceChosen && areMouseListenersEnabled) {
 						label.setBackground(null);
 					}
 				}
 
 				@Override
-				public void mouseEntered(MouseEvent e)
-				{
-					if (!StateManager.isPieceChosen && areMouseListenersEnabled)
-					{
+				public void mouseEntered(MouseEvent e) {
+					if (!StateManager.isPieceChosen && areMouseListenersEnabled) {
 						label.setBackground(new Color(133, 133, 133));
 					}
 				}
 
 				@Override
-				public void mouseClicked(MouseEvent e)
-				{
-					if (areMouseListenersEnabled)
-					{
+				public void mouseClicked(MouseEvent e) {
+					if (areMouseListenersEnabled) {
 						label.setBackground(new Color(24, 179, 0));
 
 						pieceLabelPieceMap.get(label).choose();
-						for(Piece remainingPiece : board.getRemainingPieces())
-						{
-							if(remainingPiece == null)
-							{
+						for (Piece remainingPiece : board.getRemainingPieces()) {
+							if (remainingPiece == null) {
 								continue;
 							}
 
-
-							if(remainingPiece.getPieceNumber() == pieceLabelPieceMap.get(label).getPieceNumber())
-							{
+							if (remainingPiece.getPieceNumber() == pieceLabelPieceMap.get(label).getPieceNumber()) {
 								remainingPiece.choose();
 								break;
 							}
@@ -187,24 +159,20 @@ public class PiecesPanel extends JPanel
 		}
 	}
 
-	public void aiChosePiece(Piece pieceParam)
-	{
-		for (Entry<JLabel, Piece> labelPieceKeyValue : this.pieceLabelPieceMap.entrySet())
-		{
+	public void aiChosePiece(Piece pieceParam) {
+		for (Entry<JLabel, Piece> labelPieceKeyValue : this.pieceLabelPieceMap.entrySet()) {
 			JLabel pLabel = labelPieceKeyValue.getKey();
 			Piece piece = labelPieceKeyValue.getValue();
 
-			if (piece.getPieceNumber() == pieceParam.getPieceNumber())
-			{
+			if (piece.getPieceNumber() == pieceParam.getPieceNumber()) {
 				pLabel.setBackground(new Color(252, 3, 3));
 
-				for (Entry<JLabel, MouseListener> labelMouseListenerKeyValue : this.pieceLabelMouseListenerMap.entrySet())
-				{
+				for (Entry<JLabel, MouseListener> labelMouseListenerKeyValue : this.pieceLabelMouseListenerMap
+						.entrySet()) {
 					JLabel mLabel = labelMouseListenerKeyValue.getKey();
 					MouseListener mouseListener = labelMouseListenerKeyValue.getValue();
 
-					if (mLabel == pLabel)
-					{
+					if (mLabel == pLabel) {
 						pieceLabelMouseListenerMap.remove(mLabel);
 						mLabel.removeMouseListener(mouseListener);
 						break;
@@ -213,15 +181,12 @@ public class PiecesPanel extends JPanel
 			}
 		}
 
-		for (Piece remainingPiece : this.board.getRemainingPieces())
-		{
-			if (remainingPiece == null)
-			{
+		for (Piece remainingPiece : this.board.getRemainingPieces()) {
+			if (remainingPiece == null) {
 				continue;
 			}
 
-			if (remainingPiece.getPieceNumber() == pieceParam.getPieceNumber())
-			{
+			if (remainingPiece.getPieceNumber() == pieceParam.getPieceNumber()) {
 				remainingPiece.choose();
 				board.setChosenPiece();
 				StateManager.pieceChosen();
@@ -230,24 +195,3 @@ public class PiecesPanel extends JPanel
 		}
 	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
